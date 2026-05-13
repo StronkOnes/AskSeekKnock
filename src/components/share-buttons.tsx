@@ -18,24 +18,33 @@ type ShareButtonsProps = {
   url: string;
   title: string;
   className?: string;
+  hideTitle?: boolean;
 };
 
-export function ShareButtons({ url, title, className }: ShareButtonsProps) {
-  const text = `Check out this prayer template: ${title}`;
+export function ShareButtons({ url, title, className, hideTitle }: ShareButtonsProps) {
+  const [mounted, setMounted] = React.useState(false);
+  
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const text = `Check out this book section: ${title}`;
   
   const shareLinks = {
     twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
     whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`,
-    // Instagram and TikTok don't have simple web intents for sharing content.
-    // These links will go to a placeholder or profile.
     instagram: 'https://www.instagram.com', 
     tiktok: 'https://www.tiktok.com',
   };
 
+  if (!mounted) {
+    return <div className={className} style={{ minHeight: '40px' }} />;
+  }
+
   return (
     <div className={className}>
-      <h4 className="text-sm font-semibold mb-2">Share Template:</h4>
+      {!hideTitle && <h4 className="text-sm font-semibold mb-2">Share Template:</h4>}
       <div className="flex gap-2">
         <Button variant="outline" size="icon" asChild>
           <a href={shareLinks.twitter} target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">

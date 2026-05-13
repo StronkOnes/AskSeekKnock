@@ -3,31 +3,19 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const keyword = searchParams.get('keyword');
+  const translation = searchParams.get('translation') || 'KJV';
 
   if (!keyword) {
     return NextResponse.json({ error: 'Keyword is required' }, { status: 400 });
   }
 
-  const apiKey = process.env.BIBLE_API_KEY;
-  const apiHost = process.env.BIBLE_API_HOST;
-
-  if (!apiKey || !apiHost) {
-    return NextResponse.json({ error: 'API key or host not configured' }, { status: 500 });
-  }
-
-  const url = `https://${apiHost}/GetSearch?query=${keyword}&versionId=kjv`;
+  const url = `https://bolls.life/search/${translation}/?search=${encodeURIComponent(keyword)}`;
 
   try {
-    const response = await fetch(url, {
-      headers: {
-        'x-rapidapi-host': apiHost,
-        'x-rapidapi-key': apiKey,
-      },
-    });
+    const response = await fetch(url);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      return NextResponse.json({ error: 'Failed to fetch from Bible API', details: errorText }, { status: response.status });
+      return NextResponse.json({ error: 'Failed to fetch from Bible API' }, { status: response.status });
     }
 
     const data = await response.json();

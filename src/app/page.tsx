@@ -6,22 +6,28 @@ import {
   LayoutDashboard, 
   Clock, 
   BookMarked, 
-  Calendar, 
+  Calendar as CalendarIcon, 
   PenSquare, 
   UserSquare, 
   ArrowRight,
   TrendingUp,
-  Heart
+  Heart,
+  CalendarDays
 } from 'lucide-react';
 import Link from 'next/link';
+import { Calendar } from '@/components/ui/calendar';
+import { useSession } from 'next-auth/react';
 
 export default function DashboardPage() {
+  const { data: session } = useSession();
+  const firstName = session?.user?.name?.split(' ')[0] || 'User';
+
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6 bg-background/50">
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h2 className="text-4xl font-bold tracking-tight text-blocksy-heading animate-fade-in">
-            Welcome back, User
+            Welcome back, {firstName}
           </h2>
           <p className="text-muted-foreground mt-1 animate-fade-in delay-100">
             Here's what's happening in your spiritual journey today.
@@ -56,13 +62,13 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Fasting Days</CardTitle>
             <div className="p-2 bg-orange-500/10 rounded-blocksy-md group-hover:bg-orange-500/20 transition-colors">
-              <Calendar className="h-4 w-4 text-orange-500" />
+              <CalendarIcon className="h-4 w-4 text-orange-500" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
             <p className="text-xs text-muted-foreground">
-              Next: Friday, April 3rd
+              Next: Friday, May 15th
             </p>
           </CardContent>
         </Card>
@@ -98,20 +104,61 @@ export default function DashboardPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         {/* Main Content Area - 4 cols */}
-        <Card className="col-span-4 border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-200">
-          <CardHeader>
-            <CardTitle>Recent Prayer Activity</CardTitle>
-            <CardDescription>
-              Your spiritual consistency over the last 30 days.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="h-[300px] flex items-center justify-center text-muted-foreground border-2 border-dashed border-border/50 m-6 rounded-blocksy-lg">
-             <div className="text-center">
-                <LayoutDashboard className="h-12 w-12 mx-auto opacity-20 mb-2" />
-                <p>Activity visualization will appear here</p>
-             </div>
-          </CardContent>
-        </Card>
+        <div className="col-span-4 space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarDays className="h-5 w-5 text-primary" />
+                  Spiritual Calendar
+                </CardTitle>
+                <CardDescription>View your scheduled spiritual activities.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Calendar mode="single" className="rounded-md border shadow-sm mx-auto" />
+              </CardContent>
+            </Card>
+
+            <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-250">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                  Schedule
+                </CardTitle>
+                <CardDescription>Quick access to your spiritual routine.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Link href="/personal-templates" className="block w-full">
+                  <Button variant="outline" className="w-full justify-start h-12 text-lg">
+                    <UserSquare className="mr-3 h-5 w-5 text-emerald-500" />
+                    Prayer Session
+                  </Button>
+                </Link>
+                <Link href="/prayer?tab=fasting" className="block w-full">
+                  <Button variant="outline" className="w-full justify-start h-12 text-lg">
+                    <CalendarIcon className="mr-3 h-5 w-5 text-orange-500" />
+                    Fasting Days
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-300">
+            <CardHeader>
+              <CardTitle>Recent Prayer Activity</CardTitle>
+              <CardDescription>
+                Your spiritual consistency over the last 30 days.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="h-[250px] flex items-center justify-center text-muted-foreground border-2 border-dashed border-border/50 m-6 rounded-blocksy-lg">
+               <div className="text-center">
+                  <LayoutDashboard className="h-12 w-12 mx-auto opacity-20 mb-2" />
+                  <p>Activity visualization will appear here</p>
+               </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Sidebar Cards - 3 cols */}
         <div className="col-span-3 space-y-6">
@@ -148,6 +195,26 @@ export default function DashboardPage() {
               <Link href="/community">
                 <Button variant="outline" size="sm" className="w-full border-primary/20 hover:bg-primary/5">
                   View Template
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-blocksy animate-fade-in delay-500 overflow-hidden">
+             <div className="h-2 bg-emerald-500 w-full" />
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center">
+                <BookMarked className="mr-2 h-4 w-4 text-emerald-500" />
+                Biblical Mandate
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Biblical insights and wisdom from the author's upcoming book, The Ultimate Revolution(ary)!
+              </p>
+              <Link href="/blog">
+                <Button variant="outline" size="sm" className="w-full border-emerald-500/20 hover:bg-emerald-500/5">
+                  Read Now
                 </Button>
               </Link>
             </CardContent>

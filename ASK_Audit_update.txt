@@ -1,0 +1,372 @@
+A.S.K. – The Ultimate Prayer Companion
+
+Interim Site Audit
+My Personal User Experience &amp; Flow Fixes
+Please note that I am going down the list of headers on the sidebar in the order
+that they are currently populated and situated. All of these
+Dashboard
+1. The Calendar should be moved into the dashboard section and readily
+viewable from login just above or below the Recent Prayer Activity graph.
+a. Under this, the Schedule tab should be here.
+i. When pressed, it should give two clickable options:
+ Prayer Session
+a. This must open the Templates page with the
+preloaded and uneditable A.S.K. templates.
+b. There should also be a button to Create
+Template. This is where the subscriber is able to
+curate their own templates that they are able to
+share both within the in-app social network
+community or externally to the WhatsApp,
+Facebook, X.com, TikTok and LinkedIn.
+
+ Fasting Days
+
+b. Calendar must be able to send notifications via phone operating
+system permissions and link to Google Calendar. Below is the Google
+Calendar API Key passed with the key=API_KEY parameter:
+i. AIzaSyBykbw3LwlOyJ4PPLHMapheZdMh3u4Eb44
+
+Prayer Hub
+2. Prayer Hub (Dashboard)
+a. A.S.K. Templates Tab 1
+i. Start Session button should be under the A.S.K. Templates
+tab.
+ This creates a logical flow and progression.
+
+b. Fasting Tab 2
+i. Opens Calendar with same functional flow and inputs as
+Google Calendar.
+c. Journal Tab 3
+i. Opens Journal Notepad which must have the following three
+editable but undeletable categories with all edits being marked
+as such by time and date as in a CRM application:
+ Reflections
+ Words
+ Revelations
+ Dreams
+
+d. Session Builder Tab 4
+i. Opens into the Bible Verse Locator.
+ii. This is where curated prayer sessions are built where
+verses are paired with specific prayer requests and petitions
+(items that encompass specific points) with a time allocated to
+each prayer point.
+ We need to create a Previous navigation button for the
+prayer slides
+
+Bible Verse Locator
+3. The current layout is perfect but I would like to explore populating the page
+with a dedicated Mentorship Hub to my father in the faith who has taught
+me everything Gospel-related below the two already populated
+functionality fields: Find Verses and Search by Reference.
+a. BLADE Daily Devotional
+i. This will link to my Pastor’s daily devotional, BLADE, that is
+published on his Facebook page and WhatsApp community.
+
+b. Articles
+i. Links to daily and weekly articles such as THE ANGEL OF DEATH
+IS NEAR – also published on Facebook via the same page.
+
+c. YouTube Church Service
+i. This will link to our weekly church services held and streamed
+on Saturdays via the Christian Consulate Church account.
+
+These will, in essence, be embedded links with previews that will be updated,
+daily and weekly as per my Pastor’s publishing schedule. They can exist under one
+heading - Doctrinal Truths &amp; Prophetic Insights by Ps TL Immanuel.
+Alternatively, this can be added as a dedicated tab on the sidebar. We can explore
+the different options.
+I have sent the API Key for the multi-version and multi-language bible app that we
+will be using. You can implement that.
+Sermons
+At this current juncture, this is as it should be with regards to layout. The only
+additions we can implement are basic rich text editing and formatting capabilities
+such as, bolding, underlining, font size, bullets, numbering, centering and left and
+right justification, etc. The font must remain locked to that of the app or system
+settings when we deploy to mobile.
+
+Personal Templates &gt; Prayer Templates
+The heading and Create New button are properly situated. The heading must be
+changed to Prayer Templates.
+Create and populate two buttons in the following order:
+ Personal Templates
+o These are the template sessions users and subscribers create and
+curate for their own personal employ and to share with others within
+the A.S.K. community and externally as links with previews.
+o These are sharable via link and export as .pdf files unlike the A.S.K.
+curated prayer session templates which fall under the official and
+protected intellectual property of A.S.K.
+
+ A.S.K. Templates
+o These are pre-loaded and continuously augmented templates that
+are the sole proprietorship of A.S.K. and cannot be shared or
+screenshot.
+
+I have created the Prayer Template Slides for both light mode and dark mode -
+watermarked with the logo:
+ The end slide for all the subscriber-curated prayer deck sessions needs to
+be uniform just like my slides. We will need a personal chat for me to
+elaborate. It’s not a serious thing but for brand uniformity.
+
+You actually don&#39;t need an API key for Native OS Flags.
+Unlike a third-party service (like Google Maps or OpenAI) that requires a key for
+billing and authentication, Native OS Flags are built-in commands of the Android
+and iOS operating systems. They are &quot;free&quot; in terms of cost and &quot;keyless&quot; in terms
+of implementation.
+Instead of an API key, you use code declarations within your app&#39;s native
+configuration.
+
+How to &quot;Activate&quot; Them (No Key Required)
+Since your site is hosted at ask-seek-knock.vercel.app, you cannot use these flags
+in a standard mobile browser (like Chrome or Safari) because browsers do not
+allow websites to control the phone&#39;s hardware.
+To use these &quot;Flags,&quot; you must wrap your Vercel app in a Native Shell (like
+Capacitor or React Native). Once wrapped, here is where you &quot;get&quot; the
+functionality:
+1. Android (FLAG_SECURE)
+You don&#39;t download a key; you simply add a line of Java or Kotlin code to your
+app&#39;s MainActivity.
+ Where to get it: It is part of the standard android.view.WindowManager
+library included in every Android development environment.
+
+ The &quot;Key&quot; Code: ```java
+getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+WindowManager.LayoutParams.FLAG_SECURE);
+
+2. iOS (isCaptured)
+Apple doesn&#39;t provide a &quot;block&quot; key. Instead, you &quot;subscribe&quot; to a notification that
+the OS sends out.
+ Where to get it: It is part of the UIScreen class in Apple&#39;s UIKit framework.
+ The &quot;Key&quot; Code: You listen for UIScreen.capturedDidChangeNotification.
+When that notification triggers, you run code to blur your Vercel app&#39;s
+view.
+
+If you are using Capacitor (Recommended for Vercel)
+If you want to implement this on your Vercel project quickly, use a plugin like
+Capacitor Privacy Screen. You don&#39;t need a key; you just install it via your
+terminal:
+1. Install: npm install @capacitor/privacy-screen
+2. Sync: npx cap sync
+3. Activate in your JS:
+JavaScript
+import { PrivacyScreen } from &#39;@capacitor/privacy-screen&#39;;
+const enableProtection = async () =&gt; {
+await PrivacyScreen.enable(); // This triggers the Native Flags
+automatically
+};
+When DO you need a key?
+The only time you would need an API key is if you use a Third-Party Security
+Wrapper like:
+
+ Appdome: You get the key from their User Dashboard.
+ ScreenShield: You get the key/license from their Enterprise Portal.
+Summary: If you want to stay free and simple, skip the API keys. Just use the
+native code flags in an Android/iOS wrapper for your Vercel site.
+To answer your question simply: No, you do not strictly need a backend API to
+enable PDF exporting for your journal notes.
+Since your app is hosted on Vercel, you have two primary ways to handle this:
+Client-Side (in the user&#39;s browser) or Server-Side (using Vercel Functions).
+1. The &quot;No-API&quot; Approach (Client-Side)
+You can generate the PDF entirely within the user&#39;s browser using JavaScript
+libraries. This is often the fastest and cheapest method because it doesn&#39;t use any
+server resources.
+ How it works: When the user clicks &quot;Export,&quot; a script takes the text from
+your journal note and &quot;draws&quot; it into a PDF file that the browser then
+downloads.
+ Recommended Libraries:
+o jsPDF: Great for simple text-based notes.
+o html2pdf.js: Ideal if you want the PDF to look exactly like your web
+page (it converts HTML/CSS to PDF).
+o React-PDF: If you are using React, this allows you to create PDF
+layouts using components.
+
+My Recommendation
+If your journal notes are primarily text and simple formatting, go with jsPDF or
+html2pdf.js. It keeps your app lightweight, avoids the need for a backend, and
+ensures that the user&#39;s private notes never have to leave their browser to be
+processed by a server—which is a great &quot;win&quot; for a journaling app&#39;s privacy.
+…
+Author’s Insights &gt; Biblical Mandate
+
+ The sidebar and heading titles need to change to Biblical Mandate. In order
+to align with the brand I’ve been curating within my written articles.
+ I like the header explainer below the header, “Biblical insights and wisdom
+from the author’s upcoming book.” Can we augment that to read as
+follows;
+o “Biblical insights and wisdom from the author’s upcoming book, The
+Ultimate Revolution(ary)!”
+
+Subscription
+I have sent you the Paystack API on a previous email. Let’s implement that.
+Can we also change the pricing to $2.99 for the Pro Monthly subscription tier and
+$30.99 for the Pro Yearly subscription tier which equates to a two month
+discounted fee. I think this is a good starting point which can be increased after
+our first year of service to align with standard industry prices which will be
+catered for by the Privacy Policy.
+Sign In/Up – Google
+This is what my Google Cloud Services has given me. The .json file and other
+augmentive implementation instructions are included in the email.
+ Client ID
+o   537982326161-
+c7ta0e3ti9m96au4m2705vth9v1sp53b.apps.googleusercontent.com
+ Client Secret
+o   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
+ API Key – Oauth 2.0 Client IDs
+o 537982326161-
+c7ta0e3ti9m96au4m2705vth9v1sp53b.apps.googleusercontent.com
+You might need to show me how to best navigate this Google Cloud Console. I
+hope I gave you all the right details.
+
+AESTHETIC ISSUES
+Logo
+
+ The logo needs to be changed to the sans font logo.
+ The watermark logo can be made a tad smaller so when the browser is
+populated at half its size, the logo overlaps some fundamental visual
+features.
+o I have attached examples of this using both the ASAK site and
+Google Drive for perspective sake.
+
+Themes – Light &amp; Dark
+ These are the only two themes we need. The others can be dropped
+altogether.
+ Users need to be able to set the light and dark theme according to their oS
+system preference so it automatically ‘syncs’ or ‘aligns.’
+
+
+
+Add Ts ans Cs
+
+
+TERMS AND CONDITIONS FOR A.S.K. –
+THE ULTIMATE PRAYER COMPANION
+Last Updated: April 7, 2026
+1. AGREEMENT TO TERMS
+These Terms and Conditions constitute a legally binding agreement made between you, whether
+personally or on behalf of an entity (“you”) and A.S.K. – The Ultimate Prayer Companion
+(“we,” “us,” or “our”), concerning your access to and use of the https://ask-seek-
+knock.vercel.app website and application.
+By accessing the Service, you acknowledge that you have read, understood, and agreed to be
+bound by all of these Terms and Conditions. IF YOU DO NOT AGREE WITH ALL OF
+THESE TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE
+SERVICE.
+2. THE SERVICE &amp; PERSONAL CONDUCT
+A.S.K. provides a digital platform for instructional prayer habits, community fellowship, and
+spiritual growth content.
+ Instructional Content: The articles and &quot;habit-building&quot; guides provided are for spiritual and
+educational purposes. They do not constitute professional medical, psychological, or legal
+advice.
+ User Voice: We respect the sanctity of your prayers. Your private entries remain yours;
+however, any content posted to &quot;Community Fellowship&quot; areas becomes visible to other
+members of that group.
+3. SUBSCRIPTIONS AND BILLING
+Certain aspects of the Service are provided on a tier-based subscription basis.
+ Billing: You will be billed in advance on a recurring, periodic basis (Monthly or Annually).
+ Automatic Renewal: At the end of each cycle, your subscription will automatically renew under
+the exact same conditions unless you cancel it via your account settings.
+ Fees: We reserve the right to modify subscription fees. Any price change will take effect at the
+start of the next billing cycle following notice to you.
+ Refunds: Pursuant to the South African Consumer Protection Act, subscriptions are generally
+non-refundable once the digital service has been accessed. However, refund requests are
+evaluated on a case-by-case basis.
+
+4. DATA PRIVACY (POPIA &amp; GLOBAL COMPLIANCE)
+As a South African-based entity, we are committed to the Protection of Personal Information
+Act (POPIA).
+ Sensitive Data: We recognize that prayer requests and religious affiliations are sensitive data.
+We implement industry-standard encryption to protect this information.
+ Global Reach: While we are based in South Africa, we strive to maintain data protection
+standards that align with global expectations (including GDPR principles) for our international
+Christian community.
+5. INTELLECTUAL PROPERTY RIGHTS
+Unless otherwise indicated, the Service is our proprietary property, including:
+ The A.S.K. branding and logos.
+ All website designs, audio, video, text (specifically our instructional article series), and graphics.
+ The underlying software code and database schemas.
+You are granted a limited license to use the Service for personal, non-commercial spiritual
+growth. You may not reproduce, &quot;scrape,&quot; or distribute our instructional content without
+express written permission.
+6. USER-GENERATED CONTENT &amp; FELLOWSHIP
+By posting in community areas, you represent that your content is not defamatory, hateful, or in
+violation of Christian community standards. We reserve the right to monitor, edit, or remove
+content that we deem harmful to the fellowship environment of A.S.K.
+7. LIMITATION OF LIABILITY
+In no event will A.S.K., its founder Mpho Matlou, or its affiliates be liable for any direct,
+indirect, or consequential damages resulting from your use of the app. The service is provided on
+an AS-IS and AS-AVAILABLE basis.
+8. GOVERNING LAW
+These Terms shall be governed by and defined following the laws of the Republic of South
+Africa. You irrevocably consent that the courts of South Africa shall have exclusive jurisdiction
+to resolve any dispute which may arise in connection with these terms.
+9. CONTACT US
+
+In order to resolve a complaint regarding the Service or to receive further information regarding
+use of the Service, please contact us at the contact details provided within the A.S.K. web
+application.
+
+Quick Deployment Note:
+1. Copy and Paste the text above into a new page on your Vercel app (e.g., /terms).
+2. Hyperlink this page in your sign-up form and footer.
+3. Privacy Policy: While these are your Terms, ensure you have a separate &quot;Privacy Policy&quot; link
+that specifically mentions you use Firebase (if applicable) for data storage, as this is a technical
+requirement for transparency.
+
+Privacy Policy for A.S.K. – The Ultimate Prayer Companion
+Last Updated: April 8, 2026
+This Privacy Policy describes how A.S.K. – The Ultimate Prayer Companion (“we,” “us,” or
+“our”) collects, uses, and shares your personal information when you visit or use our website and
+application located at https://ask-seek-knock.vercel.app.
+As a South African-based entity, we are committed to the Protection of Personal Information
+Act (POPIA) and strive to align our data protection standards with global principles, including
+the General Data Protection Regulation (GDPR).
+
+1. Information We Collect
+We collect information that you provide directly to us and information generated through your
+use of the Service.
+ Account Data: When you register for a subscription, we collect information such as your name
+and email address.
+ Sensitive Spiritual Data: We recognize that prayer requests, religious affiliations, and private
+journal entries are highly sensitive. Your private entries remain yours and are protected with
+industry-standard encryption.
+ User-Generated Content: Any content you post to &quot;Community Fellowship&quot; areas is visible to
+other members of that specific group.
+ Billing Information: For tier-based subscriptions, payment processing is handled by third-party
+providers. We collect billing frequency (Monthly or Annually) to manage your account.
+2. How We Use Your Information
+We use the collected information to:
+
+ Provide, maintain, and improve the A.S.K. digital platform and instructional content.
+ Process subscription renewals and manage billing cycles.
+ Facilitate community fellowship and spiritual growth.
+ Ensure compliance with South African laws and our Terms and Conditions.
+3. Data Storage and Third-Party Services
+ Technical Infrastructure: We utilize Vercel for hosting the application.
+ Data Storage: We use Firebase for secure data storage and management. This is a technical
+requirement for the transparency of our digital infrastructure.
+ Encryption: We implement industry-standard encryption to protect sensitive data, specifically
+prayer requests and personal identifiers.
+4. Legal Basis (POPIA &amp; Global Compliance)
+In accordance with POPIA, we process your personal information only when:
+ You have given consent by agreeing to our Terms and Conditions.
+ Processing is necessary for the performance of a contract (e.g., providing subscription
+services).
+ It is necessary to comply with South African law.
+5. Your Rights
+Under POPIA and GDPR, you have the right to:
+ Access the personal information we hold about you.
+ Request the correction or deletion of your data.
+ Object to the processing of your data.
+ Withdraw consent for recurring subscriptions at any time via your account settings.
+6. Data Retention
+Subscriptions are billed in advance on a recurring basis. We retain your account data as long as
+your subscription is active. Please note that pursuant to the South African Consumer
+Protection Act, subscriptions are generally non-refundable once the digital service has been
+accessed.
+7. Limitation of Liability
+While we take extensive measures to protect your data, A.S.K. and its founder, Mpho Matlou,
+shall not be liable for direct or indirect damages resulting from the use of the Service, which is
+provided on an AS-IS basis.
+
+8. Contact Us
+For any questions regarding this Privacy Policy or to exercise your data rights, please contact us
+through the details provided within the A.S.K. web application.

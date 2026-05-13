@@ -26,7 +26,7 @@ const plans = [
   },
   {
     name: 'Pro Monthly',
-    price: '$5',
+    price: '$2.99',
     period: '/month',
     features: [
       'Access to all prayer templates',
@@ -34,21 +34,21 @@ const plans = [
       'AI-powered prayer suggestions',
       'Priority support',
     ],
-    cta: 'Upgrade',
+    cta: 'Upgrade with Paystack',
     current: false,
   },
   {
     name: 'Pro Yearly',
-    price: '$50',
+    price: '$30.99',
     period: '/year',
     features: [
       'Access to all prayer templates',
       'Unlimited journal entries',
       'AI-powered prayer suggestions',
       'Priority support',
-      'Save 15% with yearly plan'
+      'Save with yearly plan (2 months free)'
     ],
-    cta: 'Upgrade',
+    cta: 'Upgrade with Paystack',
     current: false,
   },
 ];

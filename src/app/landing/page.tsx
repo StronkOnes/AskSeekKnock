@@ -50,11 +50,6 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="relative animate-slide-in-right delay-200">
-               {/* Watermark for landing section */}
-               <div className="absolute -top-20 -right-20 w-96 h-96 opacity-[0.03] pointer-events-none rotate-12">
-                  <img src="/ASKlogo1.png" alt="" className="w-full h-full object-contain" />
-               </div>
-               
                <div className="relative rounded-blocksy-xl overflow-hidden shadow-blocksy-xl border-8 border-white group">
                   <img 
                     src="/AppPreview.jpg" 
@@ -103,6 +98,30 @@ export default function LandingPage() {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Member Access Section */}
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="bg-secondary/30 rounded-blocksy-xl p-8 md:p-16 border border-border/50 flex flex-col md:flex-row items-center justify-between gap-12">
+              <div className="max-w-md space-y-4 text-center md:text-left">
+                <h2 className="text-3xl font-bold text-blocksy-heading">Member Access</h2>
+                <p className="text-muted-foreground">
+                  Already a part of the A.S.K. community? Sign in to continue your spiritual journey, access your journal, and engage with the community.
+                </p>
+              </div>
+              <div className="w-full max-w-sm space-y-4">
+                <Link href="/login" className="block w-full">
+                  <Button size="lg" className="w-full h-14 rounded-full text-lg shadow-blocksy hover:shadow-blocksy-lg transition-all">
+                    Sign In to Dashboard
+                  </Button>
+                </Link>
+                <p className="text-center text-xs text-muted-foreground">
+                  Secure access to your personal reflections and data.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -159,6 +178,7 @@ export default function LandingPage() {
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li><Link href="#" className="hover:text-primary transition-colors">About Us</Link></li>
               <li><Link href="#" className="hover:text-primary transition-colors">Contact</Link></li>
+              <li><Link href="/admin" className="hover:text-primary transition-colors">Admin Dashboard</Link></li>
               <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
               <li><Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>
