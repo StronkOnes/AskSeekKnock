@@ -59,7 +59,7 @@ export const TemplateEditor = ({ open, onOpenChange, template: initialTemplate }
       id: initialTemplate ? initialTemplate.id : `template-${Date.now()}`,
       title,
       description,
-      icon: initialTemplate?.icon || UserSquare, // Default icon
+      icon: initialTemplate?.icon || 'UserSquare', // Default icon as string
       points,
     };
 

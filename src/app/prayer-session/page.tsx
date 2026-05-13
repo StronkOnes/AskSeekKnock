@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckCircle } from 'lucide-react';
 import { SessionConfigDialog } from '@/components/session-config-dialog';
+import { IconRenderer } from '@/components/icon-renderer';
 
 export default function PrayerSessionPage() {
   const [selectedTemplateIds, setSelectedTemplateIds] = useState<string[]>([]);
@@ -49,6 +50,16 @@ export default function PrayerSessionPage() {
       setSessionTemplates([]);
     }
   }
+
+  const handlePreviousClick = () => {
+    if (currentPointIndex > 0) {
+      setCurrentPointIndex(prev => prev - 1);
+    } else if (currentTemplateIndex > 0) {
+      const prevTemplate = sessionTemplates[currentTemplateIndex - 1];
+      setCurrentTemplateIndex(prev => prev - 1);
+      setCurrentPointIndex(prevTemplate.points.length - 1);
+    }
+  }
   
   const handleTimerComplete = () => {
     const currentTemplate = sessionTemplates[currentTemplateIndex];
@@ -68,58 +79,104 @@ export default function PrayerSessionPage() {
 
   if (sessionTemplates.length > 0 && currentTemplate && currentPoint) {
     return (
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <currentTemplate.icon className="h-6 w-6"/>
-                    {currentTemplate.title}
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Current Focus:</h3>
-                    <blockquote className="p-4 bg-primary/10 border-l-4 border-primary">
-                      <p className="text-2xl font-bold text-primary">{currentPoint.title}</p>
-                      {currentPoint.text && <p className="text-muted-foreground mt-2">{currentPoint.text}</p>}
-                    </blockquote>
-                </div>
+      <div className="fixed inset-0 z-[100] bg-background flex flex-col animate-in fade-in zoom-in duration-500">
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.03] overflow-hidden">
+            <img 
+              src="/A.S.K. - Sans.png" 
+              alt="Watermark" 
+              className="w-[120%] max-w-[1200px] object-contain rotate-[-15deg]"
+            />
+        </div>
+        
+        <div className="relative z-10 flex-1 flex flex-col p-6 md:p-12">
+          <div className="flex justify-between items-center mb-12">
+            <div className="flex items-center gap-4">
+              <IconRenderer iconName={currentTemplate.icon} className="h-8 w-8 text-primary"/>
+              <h2 className="text-2xl font-bold tracking-tight">{currentTemplate.title}</h2>
+            </div>
+            <Button variant="ghost" size="sm" onClick={() => setSessionTemplates([])} className="hover:bg-destructive/10 hover:text-destructive">
+              End Session
+            </Button>
+          </div>
 
-                <div className="flex items-center gap-4">
-                  <Timer 
-                      initialMinutes={currentPoint.duration} 
-                      onComplete={handleTimerComplete}
-                      timerKey={`${currentTemplate.id}-${currentPointIndex}`}
-                  />
-                  <Button onClick={handleNextClick} variant="outline">Next</Button>
-                </div>
+          <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full space-y-12">
+            <div className="text-center space-y-6 w-full">
+              <h3 className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">Current Prayer Point</h3>
+              <div className="space-y-4">
+                <h1 className="text-4xl md:text-6xl font-black text-primary tracking-tight leading-tight">
+                  {currentPoint.title}
+                </h1>
+                {currentPoint.text && (
+                  <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed italic">
+                    "{currentPoint.text}"
+                  </p>
+                )}
+              </div>
+            </div>
 
-                
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Up Next in this Section:</h3>
-                    <ul className="space-y-2">
-                        {currentTemplate.points.map((point, index) => (
-                            <li key={point.title} className={cn("flex items-center gap-2 text-muted-foreground", {
-                                'text-foreground font-semibold': index === currentPointIndex,
-                                'line-through': index < currentPointIndex
-                            })}>
-                               {index < currentPointIndex ? <CheckCircle className="h-4 w-4 text-green-500" /> : <div className="h-4 w-4" /> }
-                                <span>{point.title} ({point.duration} min)</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+            <div className="w-full flex flex-col items-center space-y-8">
+              <Timer 
+                  initialMinutes={currentPoint.duration} 
+                  onComplete={handleTimerComplete}
+                  timerKey={`${currentTemplate.id}-${currentPointIndex}`}
+              />
+              
+              <div className="flex items-center gap-6">
+                <Button 
+                  onClick={handlePreviousClick} 
+                  variant="outline" 
+                  size="lg"
+                  disabled={currentTemplateIndex === 0 && currentPointIndex === 0}
+                  className="rounded-full px-8"
+                >
+                  Previous
+                </Button>
+                <Button 
+                  onClick={handleNextClick} 
+                  variant="default" 
+                  size="lg"
+                  className="rounded-full px-12 h-14 text-lg font-bold shadow-xl shadow-primary/20"
+                >
+                  {currentTemplateIndex === sessionTemplates.length - 1 && currentPointIndex === currentTemplate.points.length - 1 
+                    ? 'Finish Session' 
+                    : 'Next Point'}
+                </Button>
+              </div>
+            </div>
 
-                {sessionTemplates.length > 1 && 
-                  <div>
-                      <h3 className="text-lg font-semibold mb-2">Next Session:</h3>
-                      <p className="text-muted-foreground">
-                        {sessionTemplates[currentTemplateIndex + 1] ? sessionTemplates[currentTemplateIndex + 1].title : 'End of session'}
-                      </p>
-                  </div>
-                }
-            </CardContent>
-        </Card>
+            <div className="w-full max-w-md">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4 text-center">Session Progress</h3>
+                <div className="flex gap-1 h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                   {sessionTemplates.map((t, tIdx) => 
+                      t.points.map((p, pIdx) => {
+                        const isPast = tIdx < currentTemplateIndex || (tIdx === currentTemplateIndex && pIdx < currentPointIndex);
+                        const isCurrent = tIdx === currentTemplateIndex && pIdx === currentPointIndex;
+                        return (
+                          <div 
+                            key={`${t.id}-${pIdx}`} 
+                            className={cn("flex-1 transition-all duration-500", 
+                              isPast ? "bg-primary/40" : isCurrent ? "bg-primary" : "bg-transparent"
+                            )} 
+                          />
+                        )
+                      })
+                   )}
+                </div>
+            </div>
+          </div>
+          
+          <div className="mt-auto pt-8 border-t flex justify-between items-end">
+             <div className="text-left">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Up Next</p>
+                <p className="text-sm font-semibold truncate max-w-[200px]">
+                  {currentTemplate.points[currentPointIndex + 1]?.title || (sessionTemplates[currentTemplateIndex + 1] ? `Next Section: ${sessionTemplates[currentTemplateIndex + 1].title}` : 'Completion')}
+                </p>
+             </div>
+             <div className="text-right">
+                <p className="text-xs font-bold text-primary uppercase tracking-widest">A.S.K. Prayer Hub</p>
+             </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -159,7 +216,7 @@ export default function PrayerSessionPage() {
                     checked={selectedTemplateIds.includes(template.id)} 
                     onCheckedChange={() => handleSelectTemplate(template.id)}
                   />
-                  <template.icon className="mr-2 h-4 w-4" />
+                  <IconRenderer iconName={template.icon} className="mr-2 h-4 w-4" />
                   <div className="text-left">
                       <p className="font-semibold">{template.title}</p>
                       <p className="text-xs font-normal">{template.description}</p>

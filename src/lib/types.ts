@@ -1,11 +1,12 @@
 import type { LucideIcon } from "lucide-react";
 
-export type JournalCategory = 'Reflections & Perceptions' | 'Dreams & Visions' | 'Revelations & Words';
+export type JournalCategory = 'Reflections' | 'Words' | 'Revelations' | 'Dreams';
 
 export type JournalEntry = {
   id: string;
   category: JournalCategory;
   timestamp: number;
+  lastEdited?: number;
   content: string;
 };
 
@@ -19,7 +20,7 @@ export type PrayerTemplate = {
   id:string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon: string; // Store icon name as string
   points: PrayerPoint[];
 };
 

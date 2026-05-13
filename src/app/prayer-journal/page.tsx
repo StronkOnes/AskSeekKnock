@@ -9,7 +9,8 @@ import { Calendar } from '@/components/ui/calendar';
 import { useJournal } from '@/context/JournalContext';
 import type { JournalEntry, JournalCategory } from '@/lib/types';
 import { JournalEditor } from '@/components/journal-editor';
-import { PlusCircle, Edit, Trash } from 'lucide-react';
+import { PlusCircle, Edit, Trash, FileDown, History } from 'lucide-react';
+import { format } from 'date-fns';
 
 export default function PrayerJournalPage() {
   const { entries, deleteEntry } = useJournal();
@@ -30,6 +31,20 @@ export default function PrayerJournalPage() {
 
   const handleDeleteEntry = (entryId: string) => {
     deleteEntry(entryId);
+  };
+
+  const handleExportPDF = (entry: JournalEntry) => {
+    // Placeholder for jsPDF implementation
+    // The user needs to install jspdf: npm install jspdf
+    console.log('Exporting as PDF:', entry);
+    const content = `Category: ${entry.category}\nDate: ${new Date(entry.timestamp).toLocaleString()}\n${entry.lastEdited ? `Last Edited: ${new Date(entry.lastEdited).toLocaleString()}\n` : ''}\nContent:\n${entry.content}`;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `journal-entry-${entry.id}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   const filteredEntries = entries
@@ -70,9 +85,10 @@ export default function PrayerJournalPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="Reflections & Perceptions">Reflections & Perceptions</SelectItem>
-                    <SelectItem value="Dreams & Visions">Dreams & Visions</SelectItem>
-                    <SelectItem value="Revelations & Words">Revelations & Words</SelectItem>
+                    <SelectItem value="Reflections">Reflections</SelectItem>
+                    <SelectItem value="Words">Words</SelectItem>
+                    <SelectItem value="Revelations">Revelations</SelectItem>
+                    <SelectItem value="Dreams">Dreams</SelectItem>
                   </SelectContent>
                 </Select>
               </CardDescription>
@@ -82,22 +98,33 @@ export default function PrayerJournalPage() {
                 <Card key={entry.id}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{entry.category}</CardTitle>
-                        <CardDescription>{new Date(entry.timestamp).toLocaleDateString()}</CardDescription>
+                      <div className="space-y-1">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          {entry.category}
+                          {entry.lastEdited && (
+                            <span className="text-xs font-normal text-muted-foreground flex items-center gap-1">
+                              <History className="h-3 w-3" />
+                              Edited {format(new Date(entry.lastEdited), 'MMM d, p')}
+                            </span>
+                          )}
+                        </CardTitle>
+                        <CardDescription>{format(new Date(entry.timestamp), 'PPP p')}</CardDescription>
                       </div>
                       <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="icon" onClick={() => handleExportPDF(entry)} title="Export as PDF">
+                          <FileDown className="h-4 w-4 text-primary" />
+                        </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleEditEntry(entry)}>
                           <Edit className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDeleteEntry(entry.id)}>
-                          <Trash className="h-4 w-4" />
+                          <Trash className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p>{entry.content}</p>
+                    <p className="whitespace-pre-wrap">{entry.content}</p>
                   </CardContent>
                 </Card>
               ))}

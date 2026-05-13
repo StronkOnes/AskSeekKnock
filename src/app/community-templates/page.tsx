@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Users } from 'lucide-react';
 import { ShareButtons } from '@/components/share-buttons';
 import { Separator } from '@/components/ui/separator';
+import { IconRenderer } from '@/components/icon-renderer';
 
 export default function CommunityTemplatesPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<PrayerTemplate | null>(null);
@@ -54,7 +55,7 @@ export default function CommunityTemplatesPage() {
                         className="w-full justify-start h-auto py-2"
                         onClick={() => handleSelectTemplate(template)}
                     >
-                        <template.icon className="mr-2 h-4 w-4" />
+                        <IconRenderer iconName={template.icon} className="mr-2 h-4 w-4" />
                         <div className="text-left">
                             <p className="font-semibold">{template.title}</p>
                             <p className="text-xs font-normal">{template.description}</p>
@@ -70,7 +71,7 @@ export default function CommunityTemplatesPage() {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                        <selectedTemplate.icon className="h-6 w-6"/>
+                        <IconRenderer iconName={selectedTemplate.icon} className="h-6 w-6"/>
                         {selectedTemplate.title}
                     </CardTitle>
                 </CardHeader>

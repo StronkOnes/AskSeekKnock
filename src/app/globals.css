@@ -108,43 +108,19 @@
     --sidebar-ring: 224.3 76.3% 48%;
   }
 
-  /* Keeping existing themes for compatibility but aligning with Blocksy structure */
-  .theme-rose {
-    --primary: 350 80% 50%;
-    --ring: 350 80% 50%;
-    --accent-foreground: 350 80% 50%;
-  }
-
-  .theme-emerald {
-    --primary: 140 80% 30%;
-    --ring: 140 80% 30%;
-    --accent-foreground: 140 80% 30%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    line-height: 1.65;
-  }
-
   body::after {
     content: "";
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100vh;
-    height: 100vh;
-    background-image: url('/ASKlogo1.png');
+    width: 60vh;
+    height: 60vh;
+    background-image: url('/A.S.K. - Sans.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    opacity: 0.06;
+    opacity: 0.04;
     pointer-events: none;
     z-index: 9999;
   }

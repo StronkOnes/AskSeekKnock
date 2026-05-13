@@ -53,9 +53,13 @@ export const JournalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateEntry = (updatedEntry: JournalEntry) => {
+    const entryWithEdit = {
+      ...updatedEntry,
+      lastEdited: Date.now(),
+    };
     setEntries(prevEntries =>
       prevEntries.map(entry =>
-        entry.id === updatedEntry.id ? updatedEntry : entry
+        entry.id === updatedEntry.id ? entryWithEdit : entry
       )
     );
   };

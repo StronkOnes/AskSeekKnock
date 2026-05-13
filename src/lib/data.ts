@@ -1,12 +1,11 @@
 import type { JournalEntry, PrayerTemplate, SermonNote, ScheduledPrayer, BlogEntry } from './types';
-import { Heart, Shield, Users, Sun, Moon, Star, HandHelping, UserSquare } from 'lucide-react';
 
 export const prayerTemplates: PrayerTemplate[] = [
   {
     id: 'template-1',
     title: 'Everyday Prayer Session',
     description: 'A 60-minute itemized prayer session.',
-    icon: Sun,
+    icon: 'Sun',
     points: [
         { title: 'PREAMBLE: 1 Thessalonians 5: 16-18', duration: 1, text: 'Rejoice always, pray continually, give thanks in all circumstances; for this is God’s will for you in Christ Jesus.' },
         { title: 'FELLOWSHIP – Opening: Matthew 6: 9-13', duration: 2, text: '“This, then, is how you should pray: “ ‘Our Father in heaven, hallowed be your name, your kingdom come, your will be done, on earth as it is in heaven. Give us today our daily bread.  And forgive us our debts, as we also have forgiven our debtors. And lead us not into temptation, but deliver us from the evil one.' },
@@ -55,7 +54,7 @@ export const prayerTemplates: PrayerTemplate[] = [
     id: 'template-2',
     title: 'Witchcraft',
     description: 'One Hour Itemized Prayer Session',
-    icon: Shield,
+    icon: 'Shield',
     points: [
         { title: 'PREAMBLE: Ephesians 6: 10-12', duration: 5, text: 'Finally, be strong in the Lord and in his mighty power. Put on the full armor of God, so that you can take your stand against the devil’s schemes. For our struggle is not against flesh and blood, but against the rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenly realms.' },
         { title: 'WARFARE: Psalm 35: 1-3', duration: 5, text: 'Contend, Lord, with those who contend with me; fight against those who fight against me. Take up shield and armor; arise and come to my aid. Brandish spear and javelin against those who pursue me. Say to me, “I am your salvation.”' },
@@ -77,7 +76,7 @@ export const prayerTemplates: PrayerTemplate[] = [
     id: 'template-3',
     title: 'Prayers for Restoration',
     description: 'One Hour Itemized Prayer Session',
-    icon: Heart,
+    icon: 'Heart',
     points: [
         { title: 'PREAMBLE: Psalm 103: 1-5', duration: 5, text: 'Praise the Lord, my soul; all my inmost being, praise his holy name. Praise the Lord, my soul, and forget not all his benefits—who forgives all your sins and heals all your diseases, who redeems your life from the pit and crowns you with love and compassion, who satisfies your desires with good things so that your youth is renewed like the eagle’s.' },
         { title: 'PRAISE & WORSHIP: Psalm 100: 4-5', duration: 5, text: 'Enter his gates with thanksgiving and his courts with praise; give thanks to him and praise his name. For the Lord is good and his love endures forever; his faithfulness continues through all generations.' },
@@ -99,7 +98,7 @@ export const prayerTemplates: PrayerTemplate[] = [
     id: 'template-4',
     title: 'Guidance and Wisdom',
     description: 'Seek direction for your life.',
-    icon: Users, // using Users as a stand-in for a guidance icon
+    icon: 'Users', // using Users as a stand-in for a guidance icon
     points: [
       { title: 'Pray for Clarity', duration: 4 },
       { title: 'Listen for Guidance', duration: 5 },
@@ -113,7 +112,7 @@ export const communityPrayerTemplates: PrayerTemplate[] = [
       id: 'community-template-1',
       title: 'Prayer for Strength',
       description: 'A template for finding strength in difficult times, created by User A.',
-      icon: Shield,
+      icon: 'Shield',
       points: [
         { title: 'Acknowledge Weakness', duration: 3 },
         { title: 'Seek Divine Strength', duration: 5 },
@@ -125,7 +124,7 @@ export const communityPrayerTemplates: PrayerTemplate[] = [
       id: 'community-template-2',
       title: 'Finding Your Purpose',
       description: 'A prayer guide for those seeking their calling, by User B.',
-      icon: Star,
+      icon: 'Star',
       points: [
         { title: 'Quiet the Mind', duration: 5 },
         { title: 'Ask for a Vision', duration: 5 },
@@ -136,7 +135,7 @@ export const communityPrayerTemplates: PrayerTemplate[] = [
       id: 'community-template-3',
       title: 'Serving Others',
       description: 'A prayer focused on having a servant\'s heart, by User C.',
-      icon: HandHelping,
+      icon: 'HandHelping',
       points: [
         { title: 'Pray for Humility', duration: 4 },
         { title: 'Ask for Opportunities to Serve', duration: 4 },
@@ -150,7 +149,7 @@ export const personalPrayerTemplates: PrayerTemplate[] = [
     id: 'personal-template-1',
     title: 'My Daily Check-in',
     description: 'A personal template for my daily prayer time.',
-    icon: UserSquare,
+    icon: 'UserSquare',
     points: [
       { title: 'Center my thoughts', duration: 2 },
       { title: 'Pray about my tasks', duration: 5 },
@@ -162,25 +161,25 @@ export const personalPrayerTemplates: PrayerTemplate[] = [
 export const journalEntries: JournalEntry[] = [
   {
     id: 'entry-1',
-    category: 'Reflections & Perceptions',
+    category: 'Reflections',
     timestamp: new Date('2024-07-20T10:00:00').getTime(),
     content: 'Today I felt a deep sense of peace during my morning prayer. I am thankful for the quiet moments before the day begins.',
   },
   {
     id: 'entry-2',
-    category: 'Reflections & Perceptions',
+    category: 'Reflections',
     timestamp: new Date('2024-07-19T09:00:00').getTime(),
     content: 'I prayed for my family today. There are so many things on my heart for them. I feel lighter after lifting them up in prayer.',
   },
   {
     id: 'entry-3',
-    category: 'Dreams & Visions',
+    category: 'Dreams',
     timestamp: new Date('2024-07-18T23:00:00').getTime(),
     content: 'Had a vivid dream about walking through a forest. It felt significant, but the meaning is still unclear.',
   },
   {
     id: 'entry-4',
-    category: 'Revelations & Words',
+    category: 'Revelations',
     timestamp: new Date('2024-07-17T14:00:00').getTime(),
     content: 'The phrase "Be still" kept coming to mind during my reflection. A reminder to trust and wait.',
   },

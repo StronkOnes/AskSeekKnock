@@ -1,0 +1,60 @@
+This is the finalized plan for the Database Management System and Onboarding flow.
+
+  1. Final Database Schema (PostgreSQL)
+
+  Table: users
+  ┌───────────────────┬───────────┬──────────────────────────────────┐
+  │ Field             │ Type      │ Note                             │
+  ├───────────────────┼───────────┼──────────────────────────────────┤
+  │ id                │ UUID      │ Primary Key                      │
+  │ email             │ String    │ Unique                           │
+  │ password_hash     │ String    │ Encrypted (BCrypt)               │
+  │ first_name        │ String    │ Name                             │
+  │ last_name         │ String    │ Surname                          │
+  │ country           │ String    │                                  │
+  │ cell_number       │ String    │ Cellphone                        │
+  │ denomination      │ String    │                                  │
+  │ home_language     │ String    │                                  │
+  │ bible_translation │ String    │ Preferred translation            │
+  │ gender            │ String    │                                  │
+  │ phone_os          │ Enum      │ Android / iOS                    │
+  │ comm_pref         │ Enum      │ WhatsApp, Email, Both, or None   │
+  │ terms_accepted    │ Boolean   │ Consent to T&Cs                  │
+  │ privacy_accepted  │ Boolean   │ Consent to Privacy Policy        │
+  │ is_onboarded      │ Boolean   │ True after first form submission │
+  │ last_activity_at  │ Timestamp │ Updated on every interaction     │
+  └───────────────────┴───────────┴──────────────────────────────────┘
+
+  Table: messages
+  ┌─────────────┬───────────┬───────────────────┐
+  │ Field       │ Type      │ Note              │
+  ├─────────────┼───────────┼───────────────────┤
+  │ id          │ UUID      │                   │
+  │ sender_id   │ UUID      │ Link to users     │
+  │ receiver_id │ UUID      │ Link to users     │
+  │ content     │ Text      │ Message body      │
+  │ sent_at     │ Timestamp │                   │
+  │ read_at     │ Timestamp │ For "seen" status │
+  └─────────────┴───────────┴───────────────────┘
+  ---
+
+  2. The User Experience Flow
+
+   1. Signup: Minimal signup with Email, Password, and a mandatory checkbox for T&Cs and Privacy Policy.
+   2. First Login: Upon successful login, the system checks is_onboarded.
+   3. Onboarding Form: A clean, modern form appears:
+       * Personal Info: Name, Surname, Country, Cell number, Gender.
+       * Faith Details: Denomination, Home Language, Preferred Bible Translation.
+       * Device Info: Phone OS selection (Android/iOS icons).
+       * Notifications: "How should we invite you to events and site updates?" (Radio buttons for WhatsApp / Email / Both).
+   4. Database Sync: Once submitted, is_onboarded is set to true, and the user is granted full access to the site.
+   5. Activity Tracking: Every time they click a button or visit a page, we update last_activity_at.
+
+  ---
+
+  3. Technical Implementation
+   * Database: PostgreSQL (I will set up the SQL migration files).
+   * ORM: Drizzle ORM (for type-safety and performance).
+   * Auth: NextAuth.js or a custom JWT solution for secure session management.
+   * Password Security: bcryptjs for hashing.
+   * Host Compatibility: This setup works on any VPS, CPanel (with Node.js), or managed cloud host.

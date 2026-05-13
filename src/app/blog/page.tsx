@@ -23,10 +23,10 @@ const BlogPage = () => {
         <div>
           <h2 className="text-4xl font-bold tracking-tight text-blocksy-heading animate-fade-in flex items-center gap-3">
             <BookOpen className="h-10 w-10 text-primary" />
-            Author's Insights
+            Biblical Mandate
           </h2>
           <p className="text-muted-foreground mt-1 animate-fade-in delay-100">
-            Biblical insights and wisdom from the author's upcoming book.
+            Biblical insights and wisdom from the author's upcoming book, The Ultimate Revolution(ary)!
           </p>
         </div>
       </div>
