@@ -1,0 +1,21 @@
+ 📖 Bible Verse Locator
+   * Formatting Fix: Resolved the "undefined" book name issue. All search results now display the full book name, chapter, and verse correctly using a comprehensive mapping utility.
+
+  💳 Paystack Integration
+   * Payment Gateway: Fully integrated Paystack into the subscription flow.
+   * Secure Implementation: Created a dedicated PaymentButton component and server-side API routes for transaction verification and webhooks.
+   * Subscription Page: Updated the Pro plans to trigger the Paystack payment popup and handle successful transactions.
+
+  🖼️  Global Watermark
+   * Professional Branding: The A.S.K. Sans logo is now a global watermark that covers the entire background (100vw x 100vh).
+   * Visibility: Positioned at a high z-index with low opacity to ensure it's visible across all pages without interfering with content or interactions.
+
+  🗄️  Database Persistence & Community
+   * Expanded Schema: Added tables for sermons, personal templates, articles, and fasting schedules to the Drizzle SQL schema.
+   * API Infrastructure: Built API routes to handle saving and retrieving data for these new features.
+   * Messaging System: Implemented a new Community Messages feature, accessible via a new "Messages" tab in the sidebar and a link on the Community page.
+
+  🚀 Enhanced User Flow
+   * Landing Page: Set the landing page as the root entry point (/).
+   * Smart Redirects: Updated the login and onboarding flows to redirect users directly to the /dashboard.
+   * Middleware: Configured automatic redirection for logged-in users to ensure they always land on their dashboard instead of the public landing page.
