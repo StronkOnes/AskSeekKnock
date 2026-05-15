@@ -33,6 +33,7 @@ import {
   Sun,
   Moon,
   Cog,
+  MessageSquare,
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Logo } from './logo';
@@ -51,7 +52,7 @@ import {
 } from './ui/dropdown-menu';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/prayer', label: 'Prayer Hub', icon: Clock },
 
   { href: '/bible-verses', label: 'Bible Verse Locator', icon: BookMarked },
@@ -72,20 +73,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isLoggedIn = !!session;
 
   // Hide sidebar for login, signup and landing pages
-  if (pathname === '/login' || pathname === '/signup' || pathname === '/landing') {
+  if (pathname === '/login' || pathname === '/signup' || pathname === '/landing' || pathname === '/') {
     return <main className="animate-fade-in">{children}</main>;
   }
 
 
   return (
     <SidebarProvider>
-      <div className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center opacity-[0.05] overflow-hidden">
-        <img 
-          src="/A.S.K. - Sans.png" 
-          alt="Watermark" 
-          className="w-[120%] max-w-[1200px] object-contain rotate-[-15deg]"
-        />
-      </div>
       <Sidebar collapsible="icon" className="border-r border-border/50 bg-sidebar shadow-blocksy z-10">
         <SidebarHeader className="h-20 flex items-center justify-center border-b border-border/50">
           <Logo className="scale-110 transition-transform duration-blocksy hover:scale-115" />

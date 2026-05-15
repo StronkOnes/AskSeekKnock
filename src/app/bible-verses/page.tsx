@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { bookMapping } from '@/lib/bible-mapping';
 
 const formSchema = z.object({
   topic: z.string().min(2, {
@@ -47,6 +48,15 @@ export default function BibleVersesPage() {
   const [directReferenceError, setDirectReferenceError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const cleanBibleText = (text: string) => {
+    return text
+      .replace(/<[^>]*>/g, '')      // Remove all HTML-like tags (e.g., <mark>, <S>2859</S>)
+      .replace(/[a-zA-Z]+(\d+)/g, (match, p1) => match.replace(p1, '')) // Remove trailing digits from words (e.g., God2316 -> God)
+      .replace(/\s\d+\b/g, ' ')      // Remove standalone numbers that are likely Strong's
+      .replace(/\s+/g, ' ')          // Normalize whitespace
+      .trim();
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,18 +68,53 @@ export default function BibleVersesPage() {
     setIsDirectSearchLoading(true);
     setDirectReferenceResult(null);
     setDirectReferenceError(null);
+    
     try {
+      // Parse reference (e.g., "John 3:16" or "1 John 1:9")
+      const refRegex = /^(\d?\s?[a-zA-Z\s]+)\s(\d+):(\d+)$/;
+      const match = directReference.trim().match(refRegex);
+      
+      if (match) {
+        const bookName = match[1].trim();
+        const chapter = match[2];
+        const verse = match[3];
+        
+        // Find book ID
+        const reverseMapping: { [key: string]: string } = {};
+        Object.entries(bookMapping).forEach(([id, name]) => {
+          reverseMapping[name.toLowerCase()] = id;
+        });
+        
+        const bookId = reverseMapping[bookName.toLowerCase()];
+        
+        if (bookId) {
+          const response = await fetch(`https://bolls.life/get-verse/${translation}/${bookId}/${chapter}/${verse}/`);
+          const data = await response.json();
+          
+          if (response.ok && data.text) {
+            setDirectReferenceResult({ 
+              reference: `${bookName} ${chapter}:${verse}`, 
+              text: cleanBibleText(data.text) 
+            });
+            setIsDirectSearchLoading(false);
+            return;
+          }
+        }
+      }
+      
+      // Fallback to general search if parsing fails or verse not found via direct API
       const response = await fetch(`https://bolls.life/search/${translation}/?search=${encodeURIComponent(directReference)}`);
       const data = await response.json();
 
-      if (response.ok && data.length > 0) {
+      if (response.ok && Array.isArray(data) && data.length > 0) {
         const firstMatch = data[0];
+        const bookName = firstMatch.book_name || bookMapping[firstMatch.book.toString()] || `Book ${firstMatch.book}`;
         setDirectReferenceResult({ 
-          reference: `${firstMatch.book_name} ${firstMatch.chapter}:${firstMatch.verse}`, 
-          text: firstMatch.text 
+          reference: `${bookName} ${firstMatch.chapter}:${firstMatch.verse}`, 
+          text: cleanBibleText(firstMatch.text) 
         });
       } else {
-        setDirectReferenceError('Verse not found. Please try a different translation or reference.');
+        setDirectReferenceError('Verse not found. Please check the spelling and format (e.g., John 3:16).');
       }
     } catch (e) {
       setDirectReferenceError('Failed to fetch verse. Please try again.');
@@ -86,14 +131,21 @@ export default function BibleVersesPage() {
       const response = await fetch(`https://bolls.life/search/${translation}/?search=${encodeURIComponent(values.topic)}`);
       const data = await response.json();
 
-      if (response.ok) {
-        const formattedVerses = data.slice(0, 10).map((v: any) => ({
-          reference: `${v.book_name} ${v.chapter}:${v.verse}`,
-          text: v.text,
-        }));
-        setVerses(formattedVerses);
+      if (response.ok && Array.isArray(data)) {
+        if (data.length === 0) {
+          setError('No verses found for this topic.');
+        } else {
+          const formattedVerses = data.slice(0, 10).map((v: any) => {
+            const bookName = v.book_name || bookMapping[v.book.toString()] || `Book ${v.book}`;
+            return {
+              reference: `${bookName} ${v.chapter}:${v.verse}`,
+              text: cleanBibleText(v.text),
+            };
+          });
+          setVerses(formattedVerses);
+        }
       } else {
-        setError('Failed to find verses.');
+        setError('Failed to find verses. Please try a different topic or translation.');
       }
     } catch (e) {
       setError('Failed to find verses. Please try again.');

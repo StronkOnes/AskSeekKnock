@@ -21,7 +21,12 @@ export default auth((req) => {
 
     // Redirect to home if logged in and trying to access auth pages
     if (isAuthPage) {
-      return Response.redirect(new URL("/", nextUrl));
+      return Response.redirect(new URL("/dashboard", nextUrl));
+    }
+
+    // Redirect to dashboard if logged in and visiting landing page
+    if (nextUrl.pathname === "/" || nextUrl.pathname === "/landing") {
+      return Response.redirect(new URL("/dashboard", nextUrl));
     }
   }
 

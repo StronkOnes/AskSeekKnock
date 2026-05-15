@@ -8,7 +8,7 @@ const categories = ['All', 'General Discussion', 'Scripture', 'Music, Arts & Cul
 const sortOptions = ['New', 'Top', 'Popular'];
 
 import Link from 'next/link';
-import { PlusSquare } from 'lucide-react';
+import { PlusSquare, MessageSquare } from 'lucide-react';
 
 const CommunityPage = () => {
   const { posts: mockPosts } = usePosts(); // Use posts from context
@@ -49,6 +49,10 @@ const CommunityPage = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">Community</h1>
         <div className="flex items-center gap-2">
+            <Link href="/messages" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary/10 text-primary hover:bg-primary/20 h-10 px-4 py-2">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Messages
+            </Link>
             <Link href="/community/create" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-indigo-600 text-white hover:bg-indigo-700 h-10 px-4 py-2">
                 <PlusSquare className="mr-2 h-4 w-4" />
                 Create Post

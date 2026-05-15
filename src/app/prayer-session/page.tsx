@@ -80,14 +80,6 @@ export default function PrayerSessionPage() {
   if (sessionTemplates.length > 0 && currentTemplate && currentPoint) {
     return (
       <div className="fixed inset-0 z-[100] bg-background flex flex-col animate-in fade-in zoom-in duration-500">
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.03] overflow-hidden">
-            <img 
-              src="/A.S.K. - Sans.png" 
-              alt="Watermark" 
-              className="w-[120%] max-w-[1200px] object-contain rotate-[-15deg]"
-            />
-        </div>
-        
         <div className="relative z-10 flex-1 flex flex-col p-6 md:p-12">
           <div className="flex justify-between items-center mb-12">
             <div className="flex items-center gap-4">

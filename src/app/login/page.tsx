@@ -49,7 +49,7 @@ export default function LoginPage() {
           title: 'Login Successful',
           description: 'Welcome back!',
         });
-        router.push('/');
+        router.push('/dashboard');
       }
     } catch (error) {
       toast({
