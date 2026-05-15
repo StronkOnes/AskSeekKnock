@@ -61,15 +61,17 @@ const CommunityPage = () => {
         </div>
       </div>
 
-      <div className="mb-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+      <div className="mb-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden">
         <div className="flex flex-wrap items-center justify-between">
-            <div className="flex flex-wrap items-center">
-                <span className="font-semibold mr-4">Categories:</span>
-                {categories.map(category => (
-                    <button key={category} onClick={() => setSelectedCategory(category)} className={`px-3 py-1 text-sm rounded-full mr-2 mb-2 ${selectedCategory === category ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}>
-                        {category}
-                    </button>
-                ))}
+            <div className="flex items-center w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 no-scrollbar">
+                <span className="font-semibold mr-4 whitespace-nowrap">Categories:</span>
+                <div className="flex flex-nowrap lg:flex-wrap gap-2">
+                    {categories.map(category => (
+                        <button key={category} onClick={() => setSelectedCategory(category)} className={`px-3 py-1 text-sm rounded-full whitespace-nowrap ${selectedCategory === category ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}>
+                            {category}
+                        </button>
+                    ))}
+                </div>
             </div>
             <div className="flex items-center mb-2">
                 <span className="font-semibold mr-2">Sort by:</span>

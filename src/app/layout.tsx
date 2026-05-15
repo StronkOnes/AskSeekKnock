@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
 import { AppShell } from '@/components/app-shell';
 import { TemplateProvider } from '@/context/TemplateContext';
@@ -11,6 +10,7 @@ import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from '@/components/ui/toaster';
+import type { Metadata, Viewport } from 'next';
 
 export const metadata: Metadata = {
   title: 'A.S.K. - Ask Seek Knock',
@@ -24,6 +24,13 @@ export const metadata: Metadata = {
       { url: '/icon.png' },
     ],
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 async function UpdateActivity() {

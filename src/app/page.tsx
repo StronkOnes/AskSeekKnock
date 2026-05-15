@@ -30,7 +30,7 @@ export default function LandingPage() {
               <div className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary ring-1 ring-inset ring-primary/20">
                 Spiritually Focused
               </div>
-              <h1 className="text-6xl md:text-7xl font-bold tracking-tight text-blocksy-heading leading-[1.1]">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-blocksy-heading leading-[1.1]">
                 Nurture Your <span className="text-primary italic">Spiritual</span> Growth
               </h1>
               <p className="text-xl text-muted-foreground max-w-lg leading-relaxed">

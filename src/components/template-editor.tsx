@@ -120,24 +120,28 @@ export const TemplateEditor = ({ open, onOpenChange, template: initialTemplate }
           />
           <div>
             <h4 className="text-sm font-medium mb-2">Prayer Points</h4>
-            <div className="space-y-2">
+            <div className="space-y-4 md:space-y-2">
               {points.map((point, index) => (
-                <div key={index} className="flex items-center gap-2">
+                <div key={index} className="flex flex-col md:flex-row items-start md:items-center gap-2 p-3 md:p-0 border md:border-none rounded-lg">
                   <Input
                     placeholder="Point Title"
                     value={point.title}
                     onChange={(e) => handlePointChange(index, 'title', e.target.value)}
+                    className="flex-1"
                   />
-                  <Input
-                    type="number"
-                    placeholder="Duration (min)"
-                    value={point.duration}
-                    onChange={(e) => handlePointChange(index, 'duration', parseInt(e.target.value, 10))}
-                    className="w-24"
-                  />
-                  <Button variant="ghost" size="icon" onClick={() => removePoint(index)}>
-                    <Trash className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-2 w-full md:w-auto">
+                    <Input
+                      type="number"
+                      placeholder="Min"
+                      value={point.duration}
+                      onChange={(e) => handlePointChange(index, 'duration', parseInt(e.target.value, 10))}
+                      className="w-20 md:w-24"
+                    />
+                    <span className="text-xs text-muted-foreground md:hidden">minutes</span>
+                    <Button variant="ghost" size="icon" onClick={() => removePoint(index)} className="ml-auto">
+                      <Trash className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

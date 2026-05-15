@@ -83,7 +83,7 @@ export default function PersonalTemplatesPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-       <div className="flex items-center justify-between space-y-2">
+       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight font-headline">
             Prayer Templates
@@ -92,7 +92,7 @@ export default function PersonalTemplatesPage() {
             Curated and personal prayer guides.
           </p>
         </div>
-        <Button onClick={handleCreate}>
+        <Button onClick={handleCreate} className="w-full sm:w-auto">
           <PlusCircle className="mr-2 h-4 w-4" /> Create New
         </Button>
       </div>

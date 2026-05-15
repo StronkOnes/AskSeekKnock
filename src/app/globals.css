@@ -108,6 +108,11 @@
     --sidebar-ring: 224.3 76.3% 48%;
   }
 
+  body {
+    @apply bg-background text-foreground antialiased overflow-x-hidden;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
   body::after {
     content: "";
     position: fixed;
@@ -132,6 +137,14 @@
   
   a {
     @apply transition-colors duration-blocksy ease-blocksy text-blocksy-link hover:text-blocksy-link-hover;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
