@@ -10,11 +10,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { PaymentButton } from '@/components/payment-button';
 
 const plans = [
   {
     name: 'Free',
     price: '$0',
+    amount: 0,
     period: '/month',
     features: [
       'Access to basic prayer templates',
@@ -27,6 +30,7 @@ const plans = [
   {
     name: 'Pro Monthly',
     price: '$2.99',
+    amount: 2.99,
     period: '/month',
     features: [
       'Access to all prayer templates',
@@ -40,6 +44,7 @@ const plans = [
   {
     name: 'Pro Yearly',
     price: '$30.99',
+    amount: 30.99,
     period: '/year',
     features: [
       'Access to all prayer templates',
@@ -54,10 +59,7 @@ const plans = [
 ];
 
 export default function SubscriptionPage() {
-  const handleSubscription = (planName: string) => {
-    // This is where you would handle the subscription logic, e.g., redirect to a payment gateway.
-    alert(`You have selected the ${planName} plan.`);
-  };
+  const { data: session } = useSession();
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -96,14 +98,20 @@ export default function SubscriptionPage() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button
-                className="w-full"
-                disabled={plan.current}
-                onClick={() => handleSubscription(plan.name)}
-                variant={plan.name === 'Pro Monthly' ? 'default' : 'outline'}
-              >
-                {plan.cta}
-              </Button>
+              {plan.current ? (
+                <Button className="w-full" disabled variant="outline">
+                  Current Plan
+                </Button>
+              ) : (
+                <PaymentButton
+                  className="w-full"
+                  amount={plan.amount}
+                  email={session?.user?.email || ''}
+                  planName={plan.name}
+                >
+                  {plan.cta}
+                </PaymentButton>
+              )}
             </CardFooter>
           </Card>
         ))}

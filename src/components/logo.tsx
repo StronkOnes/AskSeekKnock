@@ -6,7 +6,7 @@ import Link from "next/link";
 export function Logo({ className }: { className?: string }) {
   return (
     <Link
-      href="/landing"
+      href="/"
       className={cn("flex items-center justify-center p-2 group", className)}
       suppressHydrationWarning
     >
@@ -15,8 +15,8 @@ export function Logo({ className }: { className?: string }) {
         <img
           src="/A.S.K. - Sans.png"
           alt="A.S.K. Logo"
-          width="96"
-          height="96"
+          width="128"
+          height="128"
           className="relative drop-shadow-sm transition-transform duration-blocksy group-hover:scale-105"
         />
       </div>

@@ -88,7 +88,7 @@ export default function OnboardingPage() {
                 title: 'Welcome to A.S.K!',
                 description: 'Your profile has been completed successfully.',
             });
-            router.push('/');
+            router.push('/dashboard');
         } catch (error) {
             toast({
                 variant: 'destructive',

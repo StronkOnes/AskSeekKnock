@@ -13,8 +13,17 @@ import { SessionProvider } from 'next-auth/react';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'A.S.K.',
-  description: 'A focused app for prayer and reflection.',
+  title: 'A.S.K. - Ask Seek Knock',
+  description: 'A focused platform for prayer, community, and spiritual growth.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icon.png' },
+    ],
+  },
 };
 
 async function UpdateActivity() {

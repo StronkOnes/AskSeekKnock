@@ -59,3 +59,42 @@ export const comments = pgTable('comments', {
   content: text('content').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
 });
+
+export const sermons = pgTable('sermons', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id).notNull(),
+  title: text('title').notNull(),
+  topic: text('topic'),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const personalTemplates = pgTable('personal_templates', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id).notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  icon: text('icon'),
+  points: text('points').notNull(), // JSON string of PrayerPoint[]
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const articles = pgTable('articles', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  authorId: uuid('author_id').references(() => users.id).notNull(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  category: text('category'),
+  slug: text('slug').unique(),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const fastingSchedules = pgTable('fasting_schedules', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id).notNull(),
+  title: text('title').notNull(),
+  startDate: timestamp('start_date').notNull(),
+  endDate: timestamp('end_date').notNull(),
+  notes: text('notes'),
+  createdAt: timestamp('created_at').defaultNow(),
+});
