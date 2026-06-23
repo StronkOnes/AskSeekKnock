@@ -103,12 +103,12 @@ export default function PersonalTemplatesPage() {
           <TabsTrigger value="ask" className="px-6">A.S.K. Templates</TabsTrigger>
         </TabsList>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="lg:col-span-1 space-y-4">
               <TabsContent value="personal" className="mt-0 space-y-4">
-                <Card>
+                <Card className="shadow-blocksy border-none h-full">
                     <CardHeader>
-                        <CardTitle>Your Templates</CardTitle>
+                        <CardTitle>Personal Templates</CardTitle>
                         <CardDescription>Guides created by you.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
@@ -143,17 +143,10 @@ export default function PersonalTemplatesPage() {
                         )}
                     </CardContent>
                 </Card>
-                <Card className="flex flex-col items-center justify-center p-6 text-center border-dashed border-2">
-                    <PlusCircle className="h-10 w-10 text-muted-foreground mb-4 opacity-50" />
-                    <CardTitle className="text-lg mb-2">Build New Guide</CardTitle>
-                    <Button onClick={handleCreate} size="sm">
-                        Create New
-                    </Button>
-                </Card>
               </TabsContent>
 
-              <TabsContent value="ask" className="mt-0 space-y-4">
-                <Card>
+              <TabsContent value="ask" className="mt-0 space-y-4 h-full">
+                <Card className="shadow-blocksy border-none h-full">
                     <CardHeader>
                         <CardTitle>Official A.S.K. Guides</CardTitle>
                         <CardDescription>Curated spiritual structures.</CardDescription>
@@ -180,8 +173,35 @@ export default function PersonalTemplatesPage() {
               </TabsContent>
           </div>
 
-          <div className="lg:col-span-2 space-y-4">
-              {selectedTemplate ? (
+          <div className="lg:col-span-1">
+              <TabsContent value="personal" className="mt-0 h-full">
+                <Card 
+                  className="flex flex-col items-center justify-center p-6 text-center border-dashed border-2 h-full bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors group"
+                  onClick={handleCreate}
+                >
+                    <PlusCircle className="h-16 w-16 text-primary mb-4 opacity-50 group-hover:scale-110 transition-transform" />
+                    <CardTitle className="text-2xl mb-2">Create New Template</CardTitle>
+                    <p className="text-muted-foreground mb-6 max-w-[250px]">Start building a custom prayer structure tailored to your spiritual needs.</p>
+                    <Button onClick={handleCreate} size="lg" className="h-12 px-8">
+                        Get Started
+                    </Button>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="ask" className="mt-0 h-full">
+                <Card className="flex items-center justify-center h-full border-none shadow-inner bg-muted/20">
+                    <CardContent className="flex flex-col items-center text-center max-w-xs">
+                        <UserSquare className="h-16 w-16 text-muted-foreground mb-6 opacity-20" />
+                        <h3 className="text-xl font-bold mb-2">A.S.K. Methodology</h3>
+                        <p className="text-muted-foreground">Select an official template to learn the A.S.K. way of prayer.</p>
+                    </CardContent>
+                </Card>
+              </TabsContent>
+          </div>
+        </div>
+
+        {selectedTemplate && (
+          <div className="mt-8">
               <Card className="border-none shadow-xl bg-gradient-to-br from-background to-muted/30">
                   <CardHeader className="border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10">
                       <CardTitle className="flex items-center justify-between">

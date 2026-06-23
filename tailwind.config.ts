@@ -116,10 +116,10 @@ export default {
       },
       boxShadow: {
         // Blocksy-inspired shadows
-        'blocksy-sm': '0 1px 3px rgba(0,0,0,0.08)',
-        'blocksy': '0 2px 8px rgba(0,0,0,0.1)',
-        'blocksy-lg': '0 8px 24px rgba(0,0,0,0.12)',
-        'blocksy-xl': '0 16px 48px rgba(0,0,0,0.15)',
+        'blocksy-sm': '0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
+        'blocksy': '0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.05)',
+        'blocksy-lg': '0 12px 32px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06)',
+        'blocksy-xl': '0 20px 48px rgba(0,0,0,0.15), 0 8px 16px rgba(0,0,0,0.08)',
       },
       keyframes: {
         'accordion-down': {

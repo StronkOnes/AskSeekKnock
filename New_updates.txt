@@ -1,0 +1,65 @@
+Prayer Hub
+
+1 - The button cluster that houses " A.S.K. Templates"; "Fasting"; Journal"; "Session Builder" must be made the same size as the four buttons at the top of the dashboard page.
+
+2 - The "Prayer Templates" card must be halved with regards to landscape width and kept on the left. The vacant space on the right must populate a more detailed iteration of the "Prayer Activity Monitor" which will have buttons to toggle/change the view from "weekly," "monthly," and "yearly" using three different graph visuals which I will furnish you with once done. - I'll be using Google Looker Studio to build these with properly defined reporting metrics. It uses the same password i sent in the other email if you need to get into it.
+
+Bible Verse Locator
+
+1 - "Select Translation" drop down menu must be increased by width to fit the same space as the "Find Verses" card directly beneath it.
+
+2 - The "Find Verses" and "Search by Reference" cards are sized properly. However, the "Search by Reference" card looks aesthetically incongruent because it lacks a heading. The heading to add above the text entry field is - "Enter Keyword."
+
+3 - Both the "Find Verses" and "Search by Reference" cards need an extra button with the same functionality which is to add to a slide that will make up a part of a greater template presentation. Button to be name "Add To Prayer Session"
+
+Sermons
+
+1 - The "New Sermon Note" card must fill out the left half of the available landscape space on the screen with automatic size adjustment as per the visibility or invisibility of the sidebar.
+
+2 - The right half should have a "Sermons by Month" card (you've called it "Past Notes") with the same size properties and dimensions as the "New Sermon Note" card. Inside that card there must be twelve (12) equally sized buttons with each button representing a month - January to December - which allows for easier access to the filed notes by by monthly date. > The two cards can fill out the vertical space so as to steer away from clutter that will dilute focus for the user.
+
+3 - The rich text editor is lacking an "I" (Italics) button between the B and the U. It needs to be there.
+
+4 - Rename the "Topic" field to "Preacher/Teacher". We will be using this to collect, collate, extrapolate and verify data which I will explain later.
+
+Personal Templates
+
+1 - Move the "Build New Guide" card to the right of the "Your Templates" card. Rename "Your Templates" to " Personal Templates" and "Build New Guide" to "Create New Template" > Apply the same sizing protocols #2 under the Sermons heading.
+
+______________________________________________________________________
+
+This is it for now. Let's make sure we conclude this before we look any further.
+> I know my Pastor spoke about intensifying the shadows on the outlines of the cards to bring them up off the page a bit as a means to focus the users' attention. I found this as a guide - https://www.justinmind.com/ui-design/cards which leads to https://www.justinmind.com/thank-you-win
+
+
+
+
+Good day,
+
+Below is a list of the measurable metrics that I will require to be displayed on the Acivity Monitor within the DashBoard:
+
+Name: Your Productivity Insights displaying:
+
+1 > Key Highlights:
+>>> (1) amount of time spent within the app;
+>>> (2) amount of time spent in prayer sessions;
+>>> (3) most popular prayer template for the week
+>>> (4) most popular daily time frame spent praying;
+>>> (5) most popular daily time frame spent in community
+
+2 > Productivity Streak:
+>>> Weekly and monthly bar graphs visualisations
+
+3 > Ask-Seek-Knocking Activity:
+>>> (1) scripture searches (number display)
+>>> (2) new templates created & published (shared)
+>>> (3)
+
+4 > Progress Chart (Circle Chart - Colour-Coded):
+>>> Completed
+>>> Started (In Progress)
+>>> Scheduled
+
+Some of these will be amalgamated and consolidated as we go along and discover better ways to improve efficiency both functionally and visually.
+
+Regards

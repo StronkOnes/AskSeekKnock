@@ -199,11 +199,11 @@ export default function BibleVersesPage() {
         </p>
       </div>
 
-      <div className="flex items-center gap-4 max-w-sm">
-        <div className="flex-1">
+      <div className="flex items-center gap-4 w-full lg:max-w-[calc(50%-1rem)]">
+        <div className="w-full">
           <label className="text-sm font-medium mb-1 block">Select Translation</label>
           <Select value={translation} onValueChange={setTranslation}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full h-10">
               <SelectValue placeholder="Select Translation" />
             </SelectTrigger>
             <SelectContent>
@@ -216,7 +216,7 @@ export default function BibleVersesPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card>
+        <Card className="shadow-blocksy border-none">
           <CardHeader>
             <CardTitle>Find Verses</CardTitle>
             <CardDescription>
@@ -239,16 +239,27 @@ export default function BibleVersesPage() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Find Verses
-                </Button>
+                <div className="flex gap-2">
+                  <Button type="submit" disabled={isLoading} className="flex-1">
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Find Verses
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => handleAddToSession(form.getValues().topic || 'Search Result')}
+                    className="flex-1"
+                  >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add To Prayer Session
+                  </Button>
+                </div>
               </form>
             </Form>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="shadow-blocksy border-none">
           <CardHeader>
             <CardTitle>Search by Reference</CardTitle>
             <CardDescription>
@@ -256,15 +267,28 @@ export default function BibleVersesPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex w-full items-center space-x-2">
-              <Input
-                placeholder="e.g., John 3:16"
-                value={directReference}
-                onChange={(e) => setDirectReference(e.target.value)}
-              />
-              <Button onClick={handleDirectReferenceSearch} disabled={isDirectSearchLoading}>
-                {isDirectSearchLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Search
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <FormLabel>Enter Keyword</FormLabel>
+                <div className="flex w-full items-center space-x-2">
+                  <Input
+                    placeholder="e.g., John 3:16"
+                    value={directReference}
+                    onChange={(e) => setDirectReference(e.target.value)}
+                  />
+                  <Button onClick={handleDirectReferenceSearch} disabled={isDirectSearchLoading}>
+                    {isDirectSearchLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Search
+                  </Button>
+                </div>
+              </div>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => handleAddToSession(directReference || 'Reference Search')}
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add To Prayer Session
               </Button>
             </div>
             {directReferenceResult && (

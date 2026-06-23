@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { sermonNotes as initialNotes } from '@/lib/data';
 import type { SermonNote } from '@/lib/types';
-import { ClipboardEdit, PlusCircle, Save, Edit, Tag, Bold, Underline, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, Type } from 'lucide-react';
+import { ClipboardEdit, PlusCircle, Save, Edit, Tag, Bold, Italic, Underline, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, Type } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -23,10 +23,11 @@ import {
 } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const formSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters.' }),
-  topic: z.string().min(2, { message: 'Topic must be at least 2 characters.' }),
+  preacher: z.string().min(2, { message: 'Preacher/Teacher must be at least 2 characters.' }),
 });
 
 export default function SermonsPage() {
@@ -34,6 +35,7 @@ export default function SermonsPage() {
   const [editingNote, setEditingNote] = useState<SermonNote | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
   const editEditorRef = useRef<HTMLDivElement>(null);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   
   const { toast } = useToast();
 
@@ -41,7 +43,7 @@ export default function SermonsPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
-      topic: '',
+      preacher: '',
     },
   });
   
@@ -70,7 +72,8 @@ export default function SermonsPage() {
       id: `sermon-${Date.now()}`,
       timestamp: Date.now(),
       content: content,
-      ...values,
+      title: values.title,
+      topic: values.preacher, // Keeping internal key as 'topic' to avoid breaking types for now, or I can update SermonNote type
     };
     setNotes([newSermonNote, ...notes]);
     form.reset();
@@ -87,7 +90,7 @@ export default function SermonsPage() {
 
     setNotes(
       notes.map((note) =>
-        note.id === editingNote.id ? { ...note, ...values, content } : note
+        note.id === editingNote.id ? { ...note, title: values.title, topic: values.preacher, content } : note
       )
     );
     setEditingNote(null);
@@ -101,10 +104,8 @@ export default function SermonsPage() {
     setEditingNote(note);
     editingForm.reset({
         title: note.title,
-        topic: note.topic,
+        preacher: note.topic,
     });
-    // We'll set innerHTML in useEffect or similar if needed, 
-    // but for Dialog we can try setting it after it opens.
     setTimeout(() => {
         if (editEditorRef.current) {
             editEditorRef.current.innerHTML = note.content;
@@ -112,15 +113,22 @@ export default function SermonsPage() {
     }, 0);
   }
   
-  const notesByTopic = notes.reduce((acc, note) => {
-    (acc[note.topic] = acc[note.topic] || []).push(note);
-    return acc;
-  }, {} as Record<string, SermonNote[]>);
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const filteredNotes = selectedMonth !== null 
+    ? notes.filter(n => new Date(n.timestamp).getMonth() === selectedMonth)
+    : notes;
 
   const Toolbar = () => (
     <div className="flex flex-wrap items-center gap-1 p-2 border-b bg-muted/50 rounded-t-md">
       <Button type="button" variant="ghost" size="icon" onClick={() => execCommand('bold')} title="Bold">
         <Bold className="h-4 w-4" />
+      </Button>
+      <Button type="button" variant="ghost" size="icon" onClick={() => execCommand('italic')} title="Italic">
+        <Italic className="h-4 w-4" />
       </Button>
       <Button type="button" variant="ghost" size="icon" onClick={() => execCommand('underline')} title="Underline">
         <Underline className="h-4 w-4" />
@@ -142,19 +150,6 @@ export default function SermonsPage() {
       <Button type="button" variant="ghost" size="icon" onClick={() => execCommand('justifyRight')} title="Align Right">
         <AlignRight className="h-4 w-4" />
       </Button>
-      <Separator orientation="vertical" className="h-6 mx-1" />
-      <Select onValueChange={(value) => execCommand('fontSize', value)}>
-        <SelectTrigger className="w-[80px] h-8 text-xs border-none bg-transparent">
-          <Type className="h-3 w-3 mr-1" />
-          Size
-        </SelectTrigger>
-        <SelectContent>
-            <SelectItem value="1">Small</SelectItem>
-            <SelectItem value="3">Normal</SelectItem>
-            <SelectItem value="5">Large</SelectItem>
-            <SelectItem value="7">Extra Large</SelectItem>
-        </SelectContent>
-      </Select>
     </div>
   );
 
@@ -192,12 +187,12 @@ export default function SermonsPage() {
                     />
                     <FormField
                         control={editingForm.control}
-                        name="topic"
+                        name="preacher"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Topic / Theme</FormLabel>
+                            <FormLabel>Preacher/Teacher</FormLabel>
                             <FormControl>
-                            <Input placeholder="e.g., Faith, Grace" {...field} />
+                            <Input placeholder="e.g., Ps John" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -213,12 +208,6 @@ export default function SermonsPage() {
                             ref={editEditorRef}
                             contentEditable
                             className="p-4 min-h-[300px] focus:outline-none overflow-y-auto max-h-[500px]"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Tab') {
-                                    e.preventDefault();
-                                    execCommand('indent');
-                                }
-                            }}
                         />
                     </div>
                  </div>
@@ -237,9 +226,9 @@ export default function SermonsPage() {
     </Dialog>
 
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="lg:col-span-1">
-             <Card>
+             <Card className="h-full shadow-blocksy border-none">
                 <CardHeader>
                     <CardTitle>New Sermon Note</CardTitle>
                     <CardDescription>Fill out the details below to add a new sermon note.</CardDescription>
@@ -262,12 +251,12 @@ export default function SermonsPage() {
                             />
                             <FormField
                                 control={form.control}
-                                name="topic"
+                                name="preacher"
                                 render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Topic / Theme</FormLabel>
+                                    <FormLabel>Preacher/Teacher</FormLabel>
                                     <FormControl>
-                                    <Input placeholder="e.g., Faith, Love" {...field} />
+                                    <Input placeholder="e.g., Ps TL Immanuel" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -280,19 +269,13 @@ export default function SermonsPage() {
                                     <div
                                         ref={editorRef}
                                         contentEditable
-                                        className="p-4 min-h-[200px] focus:outline-none overflow-y-auto max-h-[400px]"
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Tab') {
-                                                e.preventDefault();
-                                                execCommand('indent');
-                                            }
-                                        }}
+                                        className="p-4 min-h-[250px] focus:outline-none overflow-y-auto max-h-[400px]"
                                     />
                                 </div>
                             </div>
-                            <Button type="submit" className="w-full">
-                                <PlusCircle className="mr-2 h-4 w-4" />
-                                Add Note
+                            <Button type="submit" className="w-full h-12 text-lg">
+                                <PlusCircle className="mr-2 h-5 w-5" />
+                                Save Note
                             </Button>
                         </form>
                     </Form>
@@ -300,49 +283,63 @@ export default function SermonsPage() {
             </Card>
         </div>
 
-        <div className="lg:col-span-2">
-            <h3 className="text-2xl font-semibold font-headline pb-4">Past Notes</h3>
-            {Object.keys(notesByTopic).length > 0 ? (
-                <Accordion type="single" collapsible className="w-full">
-                    {Object.entries(notesByTopic).map(([topic, topicNotes]) => (
-                         <AccordionItem value={topic} key={topic}>
-                            <AccordionTrigger>
-                                <div className="flex items-center gap-2">
-                                    <Tag className="h-4 w-4" />
-                                    {topic} ({topicNotes.length})
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="space-y-4">
-                                {topicNotes.map((note) => (
-                                <Card key={note.id}>
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center justify-between text-lg">
+        <div className="lg:col-span-1">
+             <Card className="h-full shadow-blocksy border-none">
+                <CardHeader>
+                    <CardTitle>Sermons by Month</CardTitle>
+                    <CardDescription>Access your filed notes by monthly date.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="grid grid-cols-3 gap-2">
+                        {months.map((month, index) => (
+                            <Button 
+                                key={month} 
+                                variant={selectedMonth === index ? "default" : "outline"}
+                                className="h-12 text-xs font-semibold"
+                                onClick={() => setSelectedMonth(selectedMonth === index ? null : index)}
+                            >
+                                {month}
+                            </Button>
+                        ))}
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+                        {filteredNotes.length > 0 ? (
+                            filteredNotes.map((note) => (
+                                <Card key={note.id} className="group hover:border-primary/50 transition-colors">
+                                    <CardHeader className="pb-2">
+                                        <CardTitle className="flex items-center justify-between text-base">
                                             <span>{note.title}</span>
-                                            <Button variant="ghost" size="icon" onClick={() => startEditing(note)}>
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => startEditing(note)}>
                                                 <Edit className="h-4 w-4" />
                                             </Button>
                                         </CardTitle>
-                                        <CardDescription>{format(new Date(note.timestamp), 'PPP p')}</CardDescription>
+                                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                            <span className="font-semibold text-primary">{note.topic}</span>
+                                            <span>•</span>
+                                            <span>{format(new Date(note.timestamp), 'MMM d, yyyy')}</span>
+                                        </div>
                                     </CardHeader>
                                     <CardContent>
                                         <div 
-                                            className="text-muted-foreground prose prose-sm max-w-none dark:prose-invert"
+                                            className="text-sm text-muted-foreground prose prose-sm max-w-none line-clamp-3"
                                             dangerouslySetInnerHTML={{ __html: note.content }}
                                         />
                                     </CardContent>
                                 </Card>
-                                ))}
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
-            ) : (
-                 <p className="text-muted-foreground">You haven't added any sermon notes yet. Use the form to get started.</p>
-            )}
+                            ))
+                        ) : (
+                            <div className="text-center py-12 text-muted-foreground italic">
+                                No notes found for {selectedMonth !== null ? months[selectedMonth] : 'the selected criteria'}.
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
         </div>
       </div>
     </div>
   );
 }
-
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';

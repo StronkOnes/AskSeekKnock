@@ -15,25 +15,67 @@ import {
   CalendarDays,
   MessageSquare,
   PlusCircle,
-  Users
+  Users,
+  BookOpen,
+  CheckCircle2,
+  PlayCircle,
+  ListTodo,
+  Search,
+  Share2
 } from 'lucide-react';
 import Link from 'next/link';
 import { Calendar } from '@/components/ui/calendar';
 import { useSession } from 'next-auth/react';
 import { cn } from '@/lib/utils';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  Cell,
+  PieChart,
+  Pie
+} from 'recharts';
+import { useState } from 'react';
 
 export default function DashboardPage() {
   const { data: session } = useSession();
   const firstName = session?.user?.name?.split(' ')[0] || 'User';
+  const [viewMode, setViewMode] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
 
-  const activityData = [
-    { day: 'Mon', value: 45 },
-    { day: 'Tue', value: 70 },
-    { day: 'Wed', value: 30 },
-    { day: 'Thu', value: 85 },
-    { day: 'Fri', value: 60 },
-    { day: 'Sat', value: 90 },
-    { day: 'Sun', value: 50 },
+  const activityData = {
+    weekly: [
+      { name: 'Mon', value: 45 },
+      { name: 'Tue', value: 70 },
+      { name: 'Wed', value: 30 },
+      { name: 'Thu', value: 85 },
+      { name: 'Fri', value: 60 },
+      { name: 'Sat', value: 90 },
+      { name: 'Sun', value: 50 },
+    ],
+    monthly: [
+      { name: 'Week 1', value: 320 },
+      { name: 'Week 2', value: 450 },
+      { name: 'Week 3', value: 280 },
+      { name: 'Week 4', value: 510 },
+    ],
+    yearly: [
+      { name: 'Jan', value: 1200 },
+      { name: 'Feb', value: 1500 },
+      { name: 'Mar', value: 1100 },
+      { name: 'Apr', value: 1800 },
+      { name: 'May', value: 2100 },
+      { name: 'Jun', value: 1900 },
+    ]
+  };
+
+  const progressData = [
+    { name: 'Completed', value: 12, color: '#10b981' },
+    { name: 'In Progress', value: 5, color: '#3b82f6' },
+    { name: 'Scheduled', value: 8, color: '#f59e0b' },
   ];
 
   const friendsData = [
@@ -122,75 +164,218 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        {/* Main Content Area - 4 cols */}
-        <div className="col-span-4 space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarDays className="h-5 w-5 text-primary" />
-                  Spiritual Calendar
-                </CardTitle>
-                <CardDescription>View your scheduled spiritual activities.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Calendar mode="single" className="rounded-md border shadow-sm mx-auto" />
-              </CardContent>
-            </Card>
+      {/* Button Cluster - Same size as top cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-scale-in delay-150">
+        <Link href="/personal-templates?tab=ask">
+          <Button variant="outline" className="w-full h-24 text-lg font-bold flex flex-col gap-1 items-center justify-center shadow-blocksy hover:shadow-blocksy-lg transition-all border-none bg-white/50 backdrop-blur-sm group">
+            <BookMarked className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
+            A.S.K. Templates
+          </Button>
+        </Link>
+        <Link href="/prayer?tab=fasting">
+          <Button variant="outline" className="w-full h-24 text-lg font-bold flex flex-col gap-1 items-center justify-center shadow-blocksy hover:shadow-blocksy-lg transition-all border-none bg-white/50 backdrop-blur-sm group">
+            <CalendarIcon className="h-6 w-6 text-orange-500 group-hover:scale-110 transition-transform" />
+            Fasting
+          </Button>
+        </Link>
+        <Link href="/prayer-journal">
+          <Button variant="outline" className="w-full h-24 text-lg font-bold flex flex-col gap-1 items-center justify-center shadow-blocksy hover:shadow-blocksy-lg transition-all border-none bg-white/50 backdrop-blur-sm group">
+            <PenSquare className="h-6 w-6 text-purple-500 group-hover:scale-110 transition-transform" />
+            Journal
+          </Button>
+        </Link>
+        <Link href="/prayer-session">
+          <Button variant="outline" className="w-full h-24 text-lg font-bold flex flex-col gap-1 items-center justify-center shadow-blocksy hover:shadow-blocksy-lg transition-all border-none bg-white/50 backdrop-blur-sm group">
+            <PlayCircle className="h-6 w-6 text-emerald-500 group-hover:scale-110 transition-transform" />
+            Session Builder
+          </Button>
+        </Link>
+      </div>
 
-            <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-250">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-primary" />
-                  Schedule
-                </CardTitle>
-                <CardDescription>Quick access to your spiritual routine.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Link href="/personal-templates" className="block w-full">
-                  <Button variant="outline" className="w-full justify-start h-12 text-lg">
-                    <UserSquare className="mr-3 h-5 w-5 text-emerald-500" />
-                    Prayer Session
-                  </Button>
-                </Link>
-                <Link href="/prayer?tab=fasting" className="block w-full">
-                  <Button variant="outline" className="w-full justify-start h-12 text-lg">
-                    <CalendarIcon className="mr-3 h-5 w-5 text-orange-500" />
-                    Fasting Days
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-300">
+      <div className="grid gap-6 lg:grid-cols-7">
+        {/* Left Column - Prayer Templates (Halved width) - 3 cols */}
+        <div className="lg:col-span-3 space-y-6">
+          <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-200 h-full">
             <CardHeader>
-              <CardTitle>Recent Prayer Activity</CardTitle>
-              <CardDescription>
-                Your spiritual consistency over the last 7 days.
-              </CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <BookMarked className="h-5 w-5 text-primary" />
+                Prayer Templates
+              </CardTitle>
+              <CardDescription>Quick access to your spiritual routines.</CardDescription>
             </CardHeader>
-            <CardContent>
-               <div className="flex items-end justify-between h-[200px] gap-2 pt-4 px-2">
-                  {activityData.map((d) => (
-                    <div key={d.day} className="flex-1 flex flex-col items-center gap-2 group">
-                      <div 
-                        className="w-full bg-primary/20 rounded-t-blocksy-md transition-all duration-500 group-hover:bg-primary/40 relative overflow-hidden"
-                        style={{ height: `${d.value}%` }}
-                      >
-                        <div className="absolute inset-0 bg-primary opacity-40 group-hover:opacity-60" />
-                      </div>
-                      <span className="text-xs font-semibold text-muted-foreground">{d.day}</span>
-                    </div>
-                  ))}
-               </div>
+            <CardContent className="space-y-4">
+              <div className="grid gap-3">
+                <Button variant="outline" className="justify-start h-14 text-base border-primary/10 hover:bg-primary/5 shadow-sm">
+                  <Heart className="mr-3 h-5 w-5 text-destructive" />
+                  Morning Devotion
+                </Button>
+                <Button variant="outline" className="justify-start h-14 text-base border-primary/10 hover:bg-primary/5 shadow-sm">
+                  <Users className="mr-3 h-5 w-5 text-blue-500" />
+                  Family Intercession
+                </Button>
+                <Button variant="outline" className="justify-start h-14 text-base border-primary/10 hover:bg-primary/5 shadow-sm">
+                  <TrendingUp className="mr-3 h-5 w-5 text-emerald-500" />
+                  Spiritual Growth
+                </Button>
+                <Button variant="outline" className="justify-start h-14 text-base border-primary/10 hover:bg-primary/5 shadow-sm">
+                  <Clock className="mr-3 h-5 w-5 text-orange-500" />
+                  Night Reflection
+                </Button>
+              </div>
+              <Separator className="my-4" />
+              <CardTitle className="text-sm font-semibold mb-2">Spiritual Calendar</CardTitle>
+              <Calendar mode="single" className="rounded-md border shadow-sm mx-auto bg-white/80" />
             </CardContent>
           </Card>
         </div>
 
-        {/* Sidebar Cards - 3 cols */}
-        <div className="col-span-3 space-y-6">
+        {/* Right Column - Productivity Insights (Detailed Monitor) - 4 cols */}
+        <div className="lg:col-span-4 space-y-6">
+          <Card className="border-none shadow-blocksy bg-white/50 backdrop-blur-sm animate-fade-in delay-250 h-full overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Your Productivity Insights
+                </CardTitle>
+                <CardDescription>Detailed metrics of your spiritual engagement.</CardDescription>
+              </div>
+              <div className="flex bg-muted p-1 rounded-md">
+                {(['weekly', 'monthly', 'yearly'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setViewMode(mode)}
+                    className={cn(
+                      "px-3 py-1 text-xs rounded-sm transition-all capitalize",
+                      viewMode === mode ? "bg-white shadow-sm font-semibold" : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Key Highlights */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="p-3 rounded-blocksy-md bg-primary/5 border border-primary/10">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Time in App</p>
+                  <p className="text-lg font-bold">14h 20m</p>
+                </div>
+                <div className="p-3 rounded-blocksy-md bg-emerald-500/5 border border-emerald-500/10">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Prayer Time</p>
+                  <p className="text-lg font-bold">8h 45m</p>
+                </div>
+                <div className="p-3 rounded-blocksy-md bg-orange-500/5 border border-orange-500/10">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Top Template</p>
+                  <p className="text-sm font-bold truncate">Morning Devotion</p>
+                </div>
+                <div className="p-3 rounded-blocksy-md bg-blue-500/5 border border-blue-500/10">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Peak Prayer</p>
+                  <p className="text-lg font-bold">6:00 AM</p>
+                </div>
+                <div className="p-3 rounded-blocksy-md bg-purple-500/5 border border-purple-500/10">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Peak Community</p>
+                  <p className="text-lg font-bold">8:00 PM</p>
+                </div>
+                <div className="p-3 rounded-blocksy-md bg-amber-500/5 border border-amber-500/10">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Streak</p>
+                  <p className="text-lg font-bold">7 Days</p>
+                </div>
+              </div>
+
+              {/* Productivity Streak Bar Graph */}
+              <div className="space-y-2">
+                <p className="text-sm font-semibold flex items-center gap-2">
+                   <ListTodo className="h-4 w-4 text-primary" />
+                   Productivity Streak
+                </p>
+                <div className="h-[200px] w-full pt-4">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={activityData[viewMode]}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis 
+                        dataKey="name" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 12, fill: '#64748b' }}
+                      />
+                      <YAxis hide />
+                      <Tooltip 
+                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                        cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                      />
+                      <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                        {activityData[viewMode].map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={index === activityData[viewMode].length - 1 ? '#3b82f6' : '#94a3b8'} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                {/* ASK Activity */}
+                <div className="space-y-4">
+                   <p className="text-sm font-semibold flex items-center gap-2">
+                      <Search className="h-4 w-4 text-primary" />
+                      A-S-K Activity
+                   </p>
+                   <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 rounded-blocksy bg-white border border-border shadow-sm">
+                         <div className="flex items-center gap-2">
+                            <BookOpen className="h-4 w-4 text-primary" />
+                            <span className="text-sm">Scripture Searches</span>
+                         </div>
+                         <span className="font-bold">42</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 rounded-blocksy bg-white border border-border shadow-sm">
+                         <div className="flex items-center gap-2">
+                            <Share2 className="h-4 w-4 text-emerald-500" />
+                            <span className="text-sm">Templates Shared</span>
+                         </div>
+                         <span className="font-bold">8</span>
+                      </div>
+                   </div>
+                </div>
+
+                {/* Progress Circle Chart */}
+                <div className="space-y-4">
+                   <p className="text-sm font-semibold flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-primary" />
+                      Progress Chart
+                   </p>
+                   <div className="h-[120px] flex items-center justify-center relative">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={progressData}
+                            innerRadius={40}
+                            outerRadius={55}
+                            paddingAngle={5}
+                            dataKey="value"
+                          >
+                            {progressData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                        </PieChart>
+                      </ResponsiveContainer>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                         <span className="text-xl font-bold">25</span>
+                         <span className="text-[8px] uppercase text-muted-foreground">Total</span>
+                      </div>
+                   </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card className="border-none shadow-blocksy animate-fade-in delay-300">
             <CardHeader className="pb-3 flex flex-row items-center justify-between">
               <CardTitle className="text-lg">Fellow Believers</CardTitle>
@@ -264,28 +449,9 @@ export default function DashboardPage() {
               </Link>
             </CardContent>
           </Card>
-
-          <Card className="border-none shadow-blocksy animate-fade-in delay-500 overflow-hidden">
-             <div className="h-2 bg-emerald-500 w-full" />
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center">
-                <BookMarked className="mr-2 h-4 w-4 text-emerald-500" />
-                Biblical Mandate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Biblical insights and wisdom from the author's upcoming book, The Ultimate Revolution(ary)!
-              </p>
-              <Link href="/blog">
-                <Button variant="outline" size="sm" className="w-full border-emerald-500/20 hover:bg-emerald-500/5">
-                  Read Now
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );
 }
+
+import { Separator } from '@/components/ui/separator';
