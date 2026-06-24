@@ -184,9 +184,6 @@ export default function PrayerSessionPage() {
             Choose one or more templates to structure your prayer time.
           </p>
         </div>
-        <Button onClick={handleOpenConfigDialog} disabled={selectedTemplateIds.length === 0}>
-          Start Session
-        </Button>
       </div>
 
       <Card>

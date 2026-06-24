@@ -35,27 +35,25 @@ export default function UnifiedPrayerPage() {
         </div>
       </div>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-white/50 backdrop-blur-sm border border-border/50 shadow-sm p-1 rounded-blocksy-lg h-12 w-full md:w-auto justify-start overflow-x-auto no-scrollbar">
-          <TabsTrigger value="templates" className="rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
+        <TabsList className="bg-white/50 backdrop-blur-sm border border-border/50 shadow-sm p-1 rounded-blocksy-lg h-12 w-full justify-start overflow-x-auto no-scrollbar">
+          <TabsTrigger value="templates" className="flex-1 rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
             A.S.K. Templates
           </TabsTrigger>
-          <TabsTrigger value="fasting" className="rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
+          <TabsTrigger value="fasting" className="flex-1 rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
             Fasting
           </TabsTrigger>
-          <TabsTrigger value="journal" className="rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
+          <TabsTrigger value="journal" className="flex-1 rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
             Journal
           </TabsTrigger>
-          <TabsTrigger value="session-builder" className="rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
+          <TabsTrigger value="session-builder" className="flex-1 rounded-blocksy-md px-6 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all duration-blocksy">
             Session Builder
           </TabsTrigger>
         </TabsList>
         <div className="animate-scale-in delay-100">
           <TabsContent value="templates" className="space-y-4 focus-visible:outline-none">
-            <div className="flex justify-end mb-4">
-               <Button onClick={() => setActiveTab('session')}>
-                  <Play className="mr-2 h-4 w-4" /> Start Session
-               </Button>
-            </div>
+            <Button onClick={() => setActiveTab('session')} className="w-full mb-4">
+               <Play className="mr-2 h-4 w-4" /> Start Session
+            </Button>
             <PrayerSessionPage />
           </TabsContent>
           <TabsContent value="session" className="space-y-4 focus-visible:outline-none">
