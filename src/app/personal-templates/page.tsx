@@ -12,9 +12,11 @@ import { useTemplates } from '@/context/TemplateContext';
 import { TemplateEditor } from '@/components/template-editor';
 import { askPrayerTemplates } from '@/lib/ask-templates';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 export default function PersonalTemplatesPage() {
   const { templates, deleteTemplate } = useTemplates();
+  const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<PrayerTemplate | null>(null);
   const [currentPointIndex, setCurrentPointIndex] = useState(0);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -200,74 +202,77 @@ export default function PersonalTemplatesPage() {
           </div>
         </div>
 
-        {selectedTemplate && (
-          <div className="mt-8">
-              <Card className="border-none shadow-xl bg-gradient-to-br from-background to-muted/30">
-                  <CardHeader className="border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10">
-                      <CardTitle className="flex items-center justify-between">
-                          <span className="text-2xl">{selectedTemplate.title}</span>
-                          {activeTab === 'ask' && (
-                            <span className="text-[10px] uppercase tracking-widest bg-primary/20 text-primary px-2 py-1 rounded-full border border-primary/30">
-                              Official Content
-                            </span>
-                          )}
-                      </CardTitle>
-                      <CardDescription>{selectedTemplate.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-8 pt-8">
-                      <div className="text-center space-y-4 py-8 bg-background/40 rounded-2xl border">
-                          <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">Current Point</h3>
-                          <p className="text-4xl font-black text-primary tracking-tight px-4">{selectedTemplate.points[currentPointIndex].title}</p>
-                      </div>
-
-                      <Timer 
-                          initialMinutes={selectedTemplate.points[currentPointIndex].duration} 
-                          onComplete={handleTimerComplete}
-                          timerKey={`${selectedTemplate.id}-${currentPointIndex}`}
-                      />
-                      
-                      <div className="space-y-4">
-                          <h3 className="text-lg font-bold flex items-center gap-2">
-                            <List className="h-5 w-5 text-primary" />
-                            Session Roadmap
-                          </h3>
-                          <div className="grid gap-2">
-                              {selectedTemplate.points.map((point, index) => (
-                                  <div key={index} className={cn("flex items-center justify-between p-3 rounded-lg border transition-all", {
-                                      'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]': index === currentPointIndex,
-                                      'bg-muted/50 opacity-50 grayscale': index < currentPointIndex,
-                                      'bg-background': index > currentPointIndex
-                                  })}>
-                                     <div className="flex items-center gap-3">
-                                       <span className="text-xs font-bold opacity-50 w-4">{index + 1}.</span>
-                                       <span className="font-medium">{point.title}</span>
-                                     </div>
-                                     <span className="text-xs font-mono">{point.duration}m</span>
-                                  </div>
-                              ))}
+        {(() => {
+          if (selectedTemplate) {
+            return (
+              <div className="mt-8">
+                  <Card className="border-none shadow-xl bg-gradient-to-br from-background to-muted/30">
+                      <CardHeader className="border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10">
+                          <CardTitle className="flex items-center justify-between">
+                              <span className="text-2xl">{selectedTemplate.title}</span>
+                              {activeTab === 'ask' && (
+                                <span className="text-[10px] uppercase tracking-widest bg-primary/20 text-primary px-2 py-1 rounded-full border border-primary/30">
+                                  Official Content
+                                </span>
+                              )}
+                          </CardTitle>
+                          <CardDescription>{selectedTemplate.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-8 pt-8">
+                          <div className="text-center space-y-4 py-8 bg-background/40 rounded-2xl border">
+                              <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">Current Point</h3>
+                              <p className="text-4xl font-black text-primary tracking-tight px-4">{selectedTemplate.points[currentPointIndex].title}</p>
                           </div>
-                      </div>
-                      
-                      {/* Uniform End Slide Concept */}
-                      {currentPointIndex === selectedTemplate.points.length - 1 && (
-                        <div className="mt-8 p-6 bg-primary/5 rounded-2xl border-2 border-dashed border-primary/20 text-center animate-bounce">
-                           <p className="text-lg font-bold text-primary">HALLELUYAH! Prayer Session Complete</p>
-                           <p className="text-sm text-muted-foreground mt-1 tracking-widest uppercase">Brand Uniformity • A.S.K.</p>
-                        </div>
-                      )}
-                  </CardContent>
-              </Card>
-              ) : (
-                  <Card className="flex items-center justify-center h-[600px] border-none shadow-inner bg-muted/20">
-                      <CardContent className="flex flex-col items-center text-center max-w-xs">
-                          <UserSquare className="h-16 w-16 text-muted-foreground mb-6 opacity-20" />
-                          <h3 className="text-xl font-bold mb-2">Ready to Pray?</h3>
-                          <p className="text-muted-foreground">Select a template from the left to load your session structure.</p>
+
+                          <Timer 
+                              initialMinutes={selectedTemplate.points[currentPointIndex].duration} 
+                              onComplete={handleTimerComplete}
+                              timerKey={`${selectedTemplate.id}-${currentPointIndex}`}
+                          />
+                          
+                          <div className="space-y-4">
+                              <h3 className="text-lg font-bold flex items-center gap-2">
+                                <List className="h-5 w-5 text-primary" />
+                                Session Roadmap
+                              </h3>
+                              <div className="grid gap-2">
+                                  {selectedTemplate.points.map((point, index) => (
+                                      <div key={index} className={cn("flex items-center justify-between p-3 rounded-lg border transition-all", {
+                                          'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]': index === currentPointIndex,
+                                          'bg-muted/50 opacity-50 grayscale': index < currentPointIndex,
+                                          'bg-background': index > currentPointIndex
+                                      })}>
+                                         <div className="flex items-center gap-3">
+                                           <span className="text-xs font-bold opacity-50 w-4">{index + 1}.</span>
+                                           <span className="font-medium">{point.title}</span>
+                                         </div>
+                                         <span className="text-xs font-mono">{point.duration}m</span>
+                                      </div>
+                                  ))}
+                              </div>
+                          </div>
+                          
+                          {currentPointIndex === selectedTemplate.points.length - 1 && (
+                            <div className="mt-8 p-6 bg-primary/5 rounded-2xl border-2 border-dashed border-primary/20 text-center animate-bounce">
+                               <p className="text-lg font-bold text-primary">HALLELUYAH! Prayer Session Complete</p>
+                               <p className="text-sm text-muted-foreground mt-1 tracking-widest uppercase">Brand Uniformity • A.S.K.</p>
+                            </div>
+                          )}
                       </CardContent>
                   </Card>
-              )}
-          </div>
-        </div>
+              </div>
+            );
+          }
+          return (
+            <Card className="flex items-center justify-center h-[600px] border-none shadow-inner bg-muted/20">
+                <CardContent className="flex flex-col items-center text-center max-w-xs">
+                    <UserSquare className="h-16 w-16 text-muted-foreground mb-6 opacity-20" />
+                    <h3 className="text-xl font-bold mb-2">Ready to Pray?</h3>
+                    <p className="text-muted-foreground">Select a template from the left to load your session structure.</p>
+                </CardContent>
+            </Card>
+          );
+        })()}
       </Tabs>
       <TemplateEditor
         open={isEditorOpen}
@@ -278,4 +283,4 @@ export default function PersonalTemplatesPage() {
   );
 }
 
-import { useToast } from '@/hooks/use-toast';
+

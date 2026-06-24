@@ -11,7 +11,9 @@ import {
 } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { PaymentButton } from '@/components/payment-button';
+import dynamic from 'next/dynamic';
+
+const PaymentButton = dynamic(() => import('@/components/payment-button').then(mod => mod.PaymentButton), { ssr: false });
 
 const plans = [
   {
