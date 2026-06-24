@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 import { Loader2, BookOpen, Sparkles, PlusCircle, ExternalLink, Youtube, Facebook, MessageSquare } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -269,7 +270,7 @@ export default function BibleVersesPage() {
           <CardContent>
             <div className="space-y-4">
               <div className="space-y-2">
-                <FormLabel>Enter Keyword</FormLabel>
+                <Label>Enter Keyword</Label>
                 <div className="flex w-full items-center space-x-2">
                   <Input
                     placeholder="e.g., John 3:16"
