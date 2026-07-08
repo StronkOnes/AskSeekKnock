@@ -1,16 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { prayerTemplates } from '@/lib/data';
 import type { PrayerTemplate } from '@/lib/types';
-import { Timer } from '@/components/timer';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { CheckCircle } from 'lucide-react';
+import { Maximize2, Minimize2, ChevronLeft, ChevronRight, Play, Pause, RotateCcw } from 'lucide-react';
 import { SessionConfigDialog } from '@/components/session-config-dialog';
 import { IconRenderer } from '@/components/icon-renderer';
+import { useTemplates } from '@/context/TemplateContext';
+
+const TEMPLATE_SLIDE_FOLDERS: Record<string, string> = {
+  'template-1': '/ASK - Everyday Prayer Items - Template',
+  'template-2': '/ASK - Prayers Against Witchcraft - Template',
+  'template-3': '/PrayersForRestoration - Template',
+};
+
+const OFFICIAL_TEMPLATE_IDS = new Set(prayerTemplates.map(t => t.id));
+
+function formatTime(totalSeconds: number) {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
 
 export default function PrayerSessionPage() {
   const [selectedTemplateIds, setSelectedTemplateIds] = useState<string[]>([]);
@@ -18,6 +32,57 @@ export default function PrayerSessionPage() {
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
   const [currentPointIndex, setCurrentPointIndex] = useState(0);
   const [isConfigDialogOpen, setIsConfigDialogOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [slideError, setSlideError] = useState(false);
+  const sessionRef = useRef<HTMLDivElement>(null);
+
+  const { templates: userTemplates } = useTemplates();
+  const filteredUserTemplates = userTemplates.filter(t => !OFFICIAL_TEMPLATE_IDS.has(t.id));
+
+  const isOfficialTemplate = (id: string) => OFFICIAL_TEMPLATE_IDS.has(id);
+
+  const handleFullscreenToggle = useCallback(() => {
+    if (!document.fullscreenElement) {
+      sessionRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleChange);
+    return () => document.removeEventListener('fullscreenchange', handleChange);
+  }, []);
+
+  const setupTimer = useCallback((minutes: number) => {
+    setTimerSeconds(minutes * 60);
+    setTimerActive(false);
+  }, []);
+
+  useEffect(() => {
+    if (sessionTemplates.length > 0 && currentTemplate && currentPoint) {
+      setupTimer(currentPoint.duration);
+      setSlideError(false);
+    }
+  }, [currentTemplateIndex, currentPointIndex, sessionTemplates]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (timerActive && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds(s => s - 1);
+      }, 1000);
+    } else if (timerSeconds === 0 && timerActive) {
+      setTimerActive(false);
+      handleTimerComplete();
+    }
+    return () => { if (interval) clearInterval(interval); };
+  }, [timerActive, timerSeconds]);
 
   const handleSelectTemplate = (templateId: string) => {
     setSelectedTemplateIds(prev => 
@@ -46,10 +111,9 @@ export default function PrayerSessionPage() {
       setCurrentTemplateIndex(prev => prev + 1);
       setCurrentPointIndex(0);
     } else {
-      // Last point of last template finished
       setSessionTemplates([]);
     }
-  }
+  };
 
   const handlePreviousClick = () => {
     if (currentPointIndex > 0) {
@@ -59,8 +123,8 @@ export default function PrayerSessionPage() {
       setCurrentTemplateIndex(prev => prev - 1);
       setCurrentPointIndex(prevTemplate.points.length - 1);
     }
-  }
-  
+  };
+
   const handleTimerComplete = () => {
     const currentTemplate = sessionTemplates[currentTemplateIndex];
     if (currentPointIndex < currentTemplate.points.length - 1) {
@@ -69,108 +133,135 @@ export default function PrayerSessionPage() {
       setCurrentTemplateIndex(prev => prev + 1);
       setCurrentPointIndex(0);
     } else {
-      // Last point of last template finished
       setSessionTemplates([]);
     }
-  }
+  };
 
   const currentTemplate = sessionTemplates[currentTemplateIndex];
   const currentPoint = currentTemplate?.points[currentPointIndex];
+  const isOfficial = currentTemplate ? isOfficialTemplate(currentTemplate.id) : true;
+
+  const slideFolder = currentTemplate ? TEMPLATE_SLIDE_FOLDERS[currentTemplate.id] : null;
+  const slideUrl = slideFolder && !slideError
+    ? `${slideFolder}/Slide${currentPointIndex + 1}.jpeg`
+    : null;
 
   if (sessionTemplates.length > 0 && currentTemplate && currentPoint) {
     return (
-      <div className="fixed inset-0 z-[100] bg-background flex flex-col animate-in fade-in zoom-in duration-500">
-        <div className="relative z-10 flex-1 flex flex-col p-6 md:p-12">
-          <div className="flex justify-between items-center mb-12">
-            <div className="flex items-center gap-4">
-              <IconRenderer iconName={currentTemplate.icon} className="h-8 w-8 text-primary"/>
-              <h2 className="text-2xl font-bold tracking-tight">{currentTemplate.title}</h2>
+      <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 md:p-8">
+        <div
+          ref={sessionRef}
+          className="relative w-full max-w-6xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl bg-black"
+        >
+          {slideUrl ? (
+            <img
+              src={slideUrl}
+              alt=""
+              className="absolute inset-0 w-full h-full object-contain"
+              onError={() => setSlideError(true)}
+            />
+          ) : (
+            <div
+              className="absolute inset-0 w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${isOfficial ? '/PrayerTemplateSlideDarkMode_JPG.png' : '/PrayerTemplateSlide_JPG.jfif'})`,
+              }}
+            >
+              {isOfficial && <div className="absolute inset-0 bg-black/30" />}
             </div>
-            <Button variant="ghost" size="sm" onClick={() => setSessionTemplates([])} className="hover:bg-destructive/10 hover:text-destructive">
+          )}
+
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleFullscreenToggle}
+              className="rounded-full bg-black/40 text-white/70 hover:text-white hover:bg-black/60 backdrop-blur-sm"
+            >
+              {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSessionTemplates([])}
+              className="rounded-full bg-black/40 text-white/70 hover:text-white hover:bg-black/60 backdrop-blur-sm text-xs"
+            >
               End Session
             </Button>
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full space-y-12">
-            <div className="text-center space-y-6 w-full">
-              <h3 className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">Current Prayer Point</h3>
-              <div className="space-y-4">
-                <h1 className="text-4xl md:text-6xl font-black text-primary tracking-tight leading-tight">
-                  {currentPoint.title}
-                </h1>
-                {currentPoint.text && (
-                  <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed italic">
-                    "{currentPoint.text}"
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="w-full flex flex-col items-center space-y-8">
-              <Timer 
-                  initialMinutes={currentPoint.duration} 
-                  onComplete={handleTimerComplete}
-                  timerKey={`${currentTemplate.id}-${currentPointIndex}`}
-              />
-              
-              <div className="flex items-center gap-6">
-                <Button 
-                  onClick={handlePreviousClick} 
-                  variant="outline" 
-                  size="lg"
-                  disabled={currentTemplateIndex === 0 && currentPointIndex === 0}
-                  className="rounded-full px-8"
-                >
-                  Previous
-                </Button>
-                <Button 
-                  onClick={handleNextClick} 
-                  variant="default" 
-                  size="lg"
-                  className="rounded-full px-12 h-14 text-lg font-bold shadow-xl shadow-primary/20"
-                >
-                  {currentTemplateIndex === sessionTemplates.length - 1 && currentPointIndex === currentTemplate.points.length - 1 
-                    ? 'Finish Session' 
-                    : 'Next Point'}
-                </Button>
-              </div>
-            </div>
-
-            <div className="w-full max-w-md">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4 text-center">Session Progress</h3>
-                <div className="flex gap-1 h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-                   {sessionTemplates.map((t, tIdx) => 
-                      t.points.map((p, pIdx) => {
-                        const isPast = tIdx < currentTemplateIndex || (tIdx === currentTemplateIndex && pIdx < currentPointIndex);
-                        const isCurrent = tIdx === currentTemplateIndex && pIdx === currentPointIndex;
-                        return (
-                          <div 
-                            key={`${t.id}-${pIdx}`} 
-                            className={cn("flex-1 transition-all duration-500", 
-                              isPast ? "bg-primary/40" : isCurrent ? "bg-primary" : "bg-transparent"
-                            )} 
-                          />
-                        )
-                      })
-                   )}
-                </div>
+          <div className="absolute top-4 right-4 z-20">
+            <div className="bg-black/60 backdrop-blur-sm rounded-xl px-5 py-3 flex items-center gap-3 shadow-lg">
+              <span className="text-3xl font-mono font-bold text-white tabular-nums tracking-wider">
+                {formatTime(timerSeconds)}
+              </span>
+              <div className="h-6 w-px bg-white/20" />
+              <button
+                onClick={() => setTimerActive(!timerActive)}
+                className="rounded-full bg-white/15 hover:bg-white/25 p-2 transition-colors"
+              >
+                {timerActive ? <Pause className="h-4 w-4 text-white" /> : <Play className="h-4 w-4 text-white" />}
+              </button>
+              <button
+                onClick={() => setupTimer(currentPoint.duration)}
+                className="rounded-full bg-white/15 hover:bg-white/25 p-2 transition-colors"
+              >
+                <RotateCcw className="h-4 w-4 text-white" />
+              </button>
             </div>
           </div>
-          
-          <div className="mt-auto pt-8 border-t flex justify-between items-end">
-             <div className="text-left">
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Up Next</p>
-                <p className="text-sm font-semibold truncate max-w-[200px]">
-                  {currentTemplate.points[currentPointIndex + 1]?.title || (sessionTemplates[currentTemplateIndex + 1] ? `Next Section: ${sessionTemplates[currentTemplateIndex + 1].title}` : 'Completion')}
-                </p>
-             </div>
-             <div className="text-right">
-                <p className="text-xs font-bold text-primary uppercase tracking-widest">A.S.K. Prayer Hub</p>
-             </div>
+
+          <div
+            className="absolute left-0 inset-y-0 w-24 z-20 group flex items-center cursor-pointer"
+            onClick={handlePreviousClick}
+          >
+            <div className={cn(
+              "opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-start pl-3 w-full h-full",
+              currentTemplateIndex === 0 && currentPointIndex === 0 ? 'cursor-not-allowed' : 'cursor-pointer'
+            )}>
+              <div className={cn(
+                "rounded-full bg-black/50 backdrop-blur-sm p-2",
+                currentTemplateIndex === 0 && currentPointIndex === 0 ? 'opacity-30' : ''
+              )}>
+                <ChevronLeft className="h-8 w-8 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="absolute right-0 inset-y-0 w-24 z-20 group flex items-center cursor-pointer"
+            onClick={handleNextClick}
+          >
+            <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-end pr-3 w-full h-full">
+              <div className="rounded-full bg-black/50 backdrop-blur-sm p-2">
+                <ChevronRight className="h-8 w-8 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
+            <div className="flex gap-1 h-1 max-w-md mx-auto rounded-full overflow-hidden"
+              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+              {sessionTemplates.map((t, tIdx) =>
+                t.points.map((p, pIdx) => {
+                  const isPast = tIdx < currentTemplateIndex || (tIdx === currentTemplateIndex && pIdx < currentPointIndex);
+                  const isCurrent = tIdx === currentTemplateIndex && pIdx === currentPointIndex;
+                  return (
+                    <div
+                      key={`${t.id}-${pIdx}`}
+                      className={cn(
+                        "flex-1 transition-all duration-500 rounded-full",
+                        isPast ? "bg-primary/60" : isCurrent ? "bg-primary" : "bg-transparent"
+                      )}
+                    />
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -188,8 +279,8 @@ export default function PrayerSessionPage() {
 
       <Card>
           <CardHeader>
-              <CardTitle>Prayer Templates</CardTitle>
-              <CardDescription>Select the guides for your session.</CardDescription>
+              <CardTitle>A.S.K. Templates</CardTitle>
+              <CardDescription>Select the official guides for your session.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
               {prayerTemplates.map((template) => (
@@ -214,10 +305,50 @@ export default function PrayerSessionPage() {
               ))}
           </CardContent>
       </Card>
+
+      {filteredUserTemplates.length > 0 && (
+        <Card>
+            <CardHeader>
+                <CardTitle>Your Templates</CardTitle>
+                <CardDescription>Your custom prayer guides.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+                {filteredUserTemplates.map((template) => (
+                <div
+                    key={template.id}
+                    className={cn(
+                      "w-full justify-start h-auto py-2 px-4 rounded-md flex items-center gap-4",
+                      selectedTemplateIds.includes(template.id) ? 'bg-primary/10' : 'bg-secondary text-secondary-foreground'
+                    )}
+                    onClick={() => handleSelectTemplate(template.id)}
+                >
+                    <Checkbox 
+                      checked={selectedTemplateIds.includes(template.id)} 
+                      onCheckedChange={() => handleSelectTemplate(template.id)}
+                    />
+                    <IconRenderer iconName={template.icon} className="mr-2 h-4 w-4" />
+                    <div className="text-left">
+                        <p className="font-semibold">{template.title}</p>
+                        <p className="text-xs font-normal">{template.description}</p>
+                    </div>
+                </div>
+                ))}
+            </CardContent>
+        </Card>
+      )}
+
+      {selectedTemplateIds.length > 0 && (
+        <div className="flex justify-center">
+          <Button onClick={handleOpenConfigDialog} size="lg" className="px-12 h-14 text-lg font-bold shadow-xl shadow-primary/20 rounded-full">
+            Start Session
+          </Button>
+        </div>
+      )}
+
       <SessionConfigDialog 
         open={isConfigDialogOpen}
         onOpenChange={setIsConfigDialogOpen}
-        templates={prayerTemplates.filter(t => selectedTemplateIds.includes(t.id))}
+        templates={[...prayerTemplates, ...filteredUserTemplates].filter(t => selectedTemplateIds.includes(t.id))}
         onStartSession={handleStartSession}
       />
     </div>
