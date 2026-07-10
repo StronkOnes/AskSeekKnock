@@ -7,7 +7,7 @@ import type { PrayerTemplate } from '@/lib/types';
 import { Timer } from '@/components/timer';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, UserSquare, PlusCircle, Edit, Trash, Share2, FileDown, Lock, List } from 'lucide-react';
+import { CheckCircle, UserSquare, PlusCircle, Edit, Trash, Share2, FileDown, Lock, List, BookOpen } from 'lucide-react';
 import { useTemplates } from '@/context/TemplateContext';
 import { TemplateEditor } from '@/components/template-editor';
 import { askPrayerTemplates } from '@/lib/ask-templates';
@@ -115,11 +115,15 @@ export default function PersonalTemplatesPage() {
                     </CardHeader>
                     <CardContent className="space-y-2">
                         {templates.map((template) => (
-                        <Button
+                        <div
                             key={template.id}
-                            variant={selectedTemplate?.id === template.id ? 'default' : 'secondary'}
-                            className="w-full justify-between h-auto py-3 px-4"
                             onClick={() => handleSelectTemplate(template)}
+                            className={cn(
+                              "w-full flex items-center justify-between h-auto py-3 px-4 rounded-md cursor-pointer transition-colors",
+                              selectedTemplate?.id === template.id
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                            )}
                         >
                             <div className="flex items-center max-w-[60%]">
                                 <div className="text-left overflow-hidden">
@@ -128,6 +132,9 @@ export default function PersonalTemplatesPage() {
                                 </div>
                             </div>
                             <div className="flex items-center gap-1">
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => handleEdit(e, template)}>
+                                    <Edit className="h-4 w-4" />
+                                </Button>
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => handleShare(e, template)}>
                                     <Share2 className="h-4 w-4" />
                                 </Button>
@@ -138,7 +145,7 @@ export default function PersonalTemplatesPage() {
                                     <Trash className="h-4 w-4" />
                                 </Button>
                             </div>
-                        </Button>
+                        </div>
                         ))}
                         {templates.length === 0 && (
                           <p className="text-center py-4 text-muted-foreground text-sm italic">No personal templates yet.</p>
@@ -222,6 +229,14 @@ export default function PersonalTemplatesPage() {
                           <div className="text-center space-y-4 py-8 bg-background/40 rounded-2xl border">
                               <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">Current Point</h3>
                               <p className="text-4xl font-black text-primary tracking-tight px-4">{selectedTemplate.points[currentPointIndex].title}</p>
+                              {selectedTemplate.points[currentPointIndex].bibleVerse && (
+                                <div className="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-xl">
+                                  <p className="font-semibold flex items-center justify-center gap-2 text-primary">
+                                    <BookOpen className="h-5 w-5" /> {selectedTemplate.points[currentPointIndex].bibleVerse}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground mt-2 italic">"{selectedTemplate.points[currentPointIndex].bibleVerseText}"</p>
+                                </div>
+                              )}
                           </div>
 
                           <Timer 
@@ -235,19 +250,25 @@ export default function PersonalTemplatesPage() {
                                 <List className="h-5 w-5 text-primary" />
                                 Session Roadmap
                               </h3>
-                              <div className="grid gap-2">
+<div className="grid gap-2">
                                   {selectedTemplate.points.map((point, index) => (
-                                      <div key={index} className={cn("flex items-center justify-between p-3 rounded-lg border transition-all", {
+                                      <div key={index} className={cn("flex flex-col items-start justify-between p-3 rounded-lg border transition-all", {
                                           'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]': index === currentPointIndex,
                                           'bg-muted/50 opacity-50 grayscale': index < currentPointIndex,
                                           'bg-background': index > currentPointIndex
                                       })}>
-                                         <div className="flex items-center gap-3">
-                                           <span className="text-xs font-bold opacity-50 w-4">{index + 1}.</span>
-                                           <span className="font-medium">{point.title}</span>
-                                         </div>
-                                         <span className="text-xs font-mono">{point.duration}m</span>
-                                      </div>
+                                         <div className="flex items-center gap-3 w-full">
+                                            <span className="text-xs font-bold opacity-50 w-4">{index + 1}.</span>
+                                            <span className="font-medium">{point.title}</span>
+                                          </div>
+                                          <span className="text-xs font-mono mt-1 md:mt-0">{point.duration}m</span>
+                                          {point.bibleVerse && (
+                                            <div className="mt-2 flex items-center gap-1 text-xs text-primary/80 w-full">
+                                              <BookOpen className="h-3 w-3 flex-shrink-0" />
+                                              <span className="truncate">{point.bibleVerse}</span>
+                                            </div>
+                                          )}
+                                       </div>
                                   ))}
                               </div>
                           </div>

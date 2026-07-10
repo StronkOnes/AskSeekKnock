@@ -9,9 +9,10 @@ interface TimerProps {
   initialMinutes: number;
   onComplete: () => void;
   timerKey: string;
+  dark?: boolean;
 }
 
-export function Timer({ initialMinutes, onComplete, timerKey }: TimerProps) {
+export function Timer({ initialMinutes, onComplete, timerKey, dark }: TimerProps) {
   const [totalSeconds, setTotalSeconds] = useState(initialMinutes * 60);
   const [isActive, setIsActive] = useState(false);
 
@@ -62,18 +63,18 @@ export function Timer({ initialMinutes, onComplete, timerKey }: TimerProps) {
   const seconds = totalSeconds % 60;
 
   return (
-    <Card className="w-full max-w-md mx-auto text-center">
-      <CardHeader>
-        <CardTitle>Timer</CardTitle>
+    <Card className="w-full max-w-md mx-auto text-center shadow-lg border-2">
+      <CardHeader className={dark ? "bg-white/10" : ""}>
+        <CardTitle className={dark ? "text-white" : ""}>Timer</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="text-6xl font-bold font-mono tracking-tighter"
+        <div className={`text-6xl font-bold font-mono tracking-tighter ${dark ? 'text-white' : ''}`}
              aria-live="polite" aria-atomic="true">
           {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-center space-x-4">
-        <Button onClick={toggleTimer} size="lg">
+      <CardFooter className={`flex justify-center space-x-4 ${dark ? 'bg-white/5' : ''}`}>
+        <Button onClick={toggleTimer} size="lg" variant={dark ? "secondary" : "default"}>
           {isActive ? (
             <>
               <Pause className="mr-2 h-4 w-4" /> Pause
@@ -84,7 +85,7 @@ export function Timer({ initialMinutes, onComplete, timerKey }: TimerProps) {
             </>
           )}
         </Button>
-        <Button onClick={resetTimer} variant="outline" size="lg">
+        <Button onClick={resetTimer} variant={dark ? "secondary" : "outline"} size="lg">
           <RotateCcw className="mr-2 h-4 w-4" /> Reset
         </Button>
       </CardFooter>

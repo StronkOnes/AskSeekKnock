@@ -13,11 +13,11 @@ export function Logo({ className }: { className?: string }) {
       <div className="relative">
         <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
         <img
-          src="/A.S.K. - Sans.png"
+          src="/A.S.K. - Sans1.png"
           alt="A.S.K. Logo"
-          width="128"
-          height="128"
-          className="relative drop-shadow-sm transition-transform duration-blocksy group-hover:scale-105"
+          width="64"
+          height="64"
+          className="relative drop-shadow-sm transition-transform duration-blocksy group-hover:scale-110"
         />
       </div>
     </Link>

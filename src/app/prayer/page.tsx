@@ -7,12 +7,13 @@ import FastingSchedulerContent from './FastingSchedulerContent';
 import PrayerJournalPage from '../prayer-journal/page';
 import BibleVersesPage from '../bible-verses/page';
 import { Button } from '@/components/ui/button';
-import { Play } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function UnifiedPrayerPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('templates');
 
   useEffect(() => {
@@ -51,12 +52,14 @@ export default function UnifiedPrayerPage() {
         </TabsList>
         <div className="animate-scale-in delay-100">
           <TabsContent value="templates" className="space-y-4 focus-visible:outline-none">
-            <Button onClick={() => setActiveTab('session')} className="w-full mb-4">
-               <Play className="mr-2 h-4 w-4" /> Start Session
-            </Button>
-            <PrayerSessionPage />
-          </TabsContent>
-          <TabsContent value="session" className="space-y-4 focus-visible:outline-none">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Select official or personal templates below to start your prayer session.
+              </p>
+              <Button variant="outline" size="sm" onClick={() => router.push('/personal-templates')}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Manage Templates
+              </Button>
+            </div>
             <PrayerSessionPage />
           </TabsContent>
           <TabsContent value="fasting" className="space-y-4 focus-visible:outline-none">

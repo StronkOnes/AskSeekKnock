@@ -14,6 +14,8 @@ export type PrayerPoint = {
   title: string;
   duration: number; // in minutes
   text?: string;
+  bibleVerse?: string; // e.g., "John 3:16"
+  bibleVerseText?: string; // The full verse text
 };
 
 export type PrayerTemplate = {

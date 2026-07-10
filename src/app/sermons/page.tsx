@@ -207,7 +207,7 @@ export default function SermonsPage() {
                         <div
                             ref={editEditorRef}
                             contentEditable
-                            className="p-4 min-h-[300px] focus:outline-none overflow-y-auto max-h-[500px]"
+                            className="p-4 min-h-[300px] focus:outline-none overflow-y-auto max-h-[500px] note-content"
                         />
                     </div>
                  </div>
@@ -269,7 +269,7 @@ export default function SermonsPage() {
                                     <div
                                         ref={editorRef}
                                         contentEditable
-                                        className="p-4 min-h-[250px] focus:outline-none overflow-y-auto max-h-[400px]"
+                                        className="p-4 min-h-[250px] focus:outline-none overflow-y-auto max-h-[400px] note-content"
                                     />
                                 </div>
                             </div>
@@ -324,7 +324,7 @@ export default function SermonsPage() {
                                     </CardHeader>
                                     <CardContent>
                                         <div 
-                                            className="text-sm text-muted-foreground prose prose-sm max-w-none line-clamp-3"
+                                            className="text-sm text-muted-foreground note-content line-clamp-3"
                                             dangerouslySetInnerHTML={{ __html: note.content }}
                                         />
                                     </CardContent>

@@ -10,12 +10,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
-import { Loader2, BookOpen, Sparkles, PlusCircle, ExternalLink, Youtube, Facebook, MessageSquare } from 'lucide-react';
+import { Loader2, BookOpen, Sparkles, ExternalLink, Youtube, Facebook, MessageSquare, FileDown } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { bookMapping } from '@/lib/bible-mapping';
+import { useTemplates } from '@/context/TemplateContext';
+import type { PrayerTemplate } from '@/lib/types';
 
 const formSchema = z.object({
   topic: z.string().min(2, {
@@ -48,6 +50,35 @@ export default function BibleVersesPage() {
   const [directReferenceResult, setDirectReferenceResult] = useState<{ reference: string; text: string } | null>(null);
   const [directReferenceError, setDirectReferenceError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { templates: userTemplates, addTemplate, updateTemplate } = useTemplates();
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
+
+  const officialTemplateIds = new Set([
+    'template-1','template-2','template-3','template-4',
+    'ask-template-1','ask-template-2','ask-template-3','ask-template-4','ask-template-5',
+    'ask-template-6','ask-template-7','ask-template-8','ask-template-9','ask-template-10',
+    'ask-template-11','ask-template-12','ask-template-13','ask-template-14','ask-template-15','ask-template-16',
+    'personal-template-1'
+  ]);
+  const filteredTemplates = userTemplates.filter(t => !officialTemplateIds.has(t.id));
+
+  const handleAddToTemplate = (verseRef: string, verseText: string) => {
+    if (!selectedTemplateId) {
+      toast({ title: 'No template selected', description: 'Please select a template first.', variant: 'destructive' });
+      return;
+    }
+    const template = userTemplates.find(t => t.id === selectedTemplateId);
+    if (!template) return;
+    const updatedTemplate: PrayerTemplate = {
+      ...template,
+      points: [...template.points, { title: verseRef, duration: 2, bibleVerse: verseRef, bibleVerseText: verseText }],
+    };
+    updateTemplate(updatedTemplate);
+    toast({
+      title: 'Verse Added',
+      description: `"${verseRef}" added to "${template.title}".`,
+    });
+  };
 
   const cleanBibleText = (text: string) => {
     return text
@@ -181,14 +212,6 @@ export default function BibleVersesPage() {
     }
   }
 
-  const handleAddToSession = (verse: string) => {
-    console.log('Added to session:', verse);
-    toast({
-      title: 'Verse Added',
-      description: `"${verse}" has been added to your prayer session.`,
-    });
-  };
-
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
       <div className="space-y-2">
@@ -216,6 +239,24 @@ export default function BibleVersesPage() {
         </div>
       </div>
 
+      {filteredTemplates.length > 0 && (
+        <div className="flex items-center gap-4 w-full lg:max-w-[calc(50%-1rem)]">
+          <div className="w-full">
+            <label className="text-sm font-medium mb-1 block">Add Verse to Template</label>
+            <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
+              <SelectTrigger className="w-full h-10">
+                <SelectValue placeholder="Select a personal template..." />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredTemplates.map((t) => (
+                  <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="shadow-blocksy border-none">
           <CardHeader>
@@ -240,21 +281,10 @@ export default function BibleVersesPage() {
                     </FormItem>
                   )}
                 />
-                <div className="flex gap-2">
-                  <Button type="submit" disabled={isLoading} className="flex-1">
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Find Verses
-                  </Button>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => handleAddToSession(form.getValues().topic || 'Search Result')}
-                    className="flex-1"
-                  >
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add To Prayer Session
-                  </Button>
-                </div>
+                <Button type="submit" disabled={isLoading} className="w-full">
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Find Verses
+                </Button>
               </form>
             </Form>
           </CardContent>
@@ -277,33 +307,27 @@ export default function BibleVersesPage() {
                     value={directReference}
                     onChange={(e) => setDirectReference(e.target.value)}
                   />
-                  <Button onClick={handleDirectReferenceSearch} disabled={isDirectSearchLoading}>
+                  <Button onClick={handleDirectReferenceSearch} disabled={isDirectSearchLoading} className="flex-shrink-0">
                     {isDirectSearchLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Search
                   </Button>
                 </div>
-              </div>
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={() => handleAddToSession(directReference || 'Reference Search')}
-              >
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add To Prayer Session
-              </Button>
+            </div>
             </div>
             {directReferenceResult && (
               <div className="mt-4 p-4 bg-secondary rounded-md">
                 <p className="font-semibold">{directReferenceResult.reference}</p>
                 <p className="text-muted-foreground">{directReferenceResult.text}</p>
-                <Button
-                  variant="outline"
-                  className="mt-2"
-                  onClick={() => handleAddToSession(directReferenceResult.reference)}
-                >
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add to Session
-                </Button>
+                {selectedTemplateId && (
+                  <Button
+                    variant="default"
+                    className="w-full mt-2"
+                    onClick={() => handleAddToTemplate(directReferenceResult.reference, directReferenceResult.text)}
+                  >
+                    <FileDown className="mr-2 h-4 w-4" />
+                    Add to Template
+                  </Button>
+                )}
               </div>
             )}
             {directReferenceError && (
@@ -350,23 +374,27 @@ export default function BibleVersesPage() {
                     </p>
                   )}
                 </CardContent>
-                <CardFooter className="gap-2">
+                <CardFooter className="flex-col gap-2">
                   <Button
                     onClick={() => handleGeneratePrayer(item.text, index)}
                     disabled={item.isGeneratingPrayer || !!item.prayer}
+                    className="w-full"
                   >
                     {item.isGeneratingPrayer && (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
                     Generate Prayer
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleAddToSession(item.reference)}
-                  >
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add to Session
-                  </Button>
+                  {selectedTemplateId && (
+                    <Button
+                      variant="default"
+                      className="w-full"
+                      onClick={() => handleAddToTemplate(item.reference, item.text)}
+                    >
+                      <FileDown className="mr-2 h-4 w-4" />
+                      Add to Template
+                    </Button>
+                  )}
                 </CardFooter>
               </Card>
             ))}
